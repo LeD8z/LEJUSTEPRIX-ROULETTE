@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette des Lots</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wheel-container {
+            position: relative;
+            margin: 40px auto;
+            width: 400px;
+            height: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .wheel-container:hover {
+            transform: scale(1.02);
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            background: white;
+        }
+
+        .section-text {
+            position: absolute;
+            color: white;
+            font-weight: 900;
+            font-size: 14px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f0f0f0, #ffffff);
+            border-radius: 50%;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.8);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #ddd;
+        }
+
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #ffd700;
+            z-index: 15;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+            animation: bounce 2s infinite;
+        }
+
+        .controls {
+            margin: 30px 0;
+        }
+
+        .spin-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .spin-btn:hover::before {
+            left: 100%;
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(255,107,107,0.6);
+        }
+
+        .spin-btn:active {
+            transform: translateY(0);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .result:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .result h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .contact-btn {
+            background: linear-gradient(45deg, #0088cc, #0066aa);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,136,204,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0,136,204,0.6);
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info:hover {
+            background: rgba(0,0,0,0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        .winning-section {
+            animation: glow 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 Roulette des Lots 🎰</h1>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel">
+                <!-- Les sections seront générées par JavaScript -->
+            </div>
+            <div class="wheel-center">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQ1IiBmaWxsPSIjZjBmMGYwIiBzdHJva2U9IiNkZGQiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNNTAgMTBDNzIuMDkxNCAxMCA5MCAyNy45MDg2IDkwIDUwQzkwIDcyLjA5MTQgNzIuMDkxNCA5MCA1MCA5MEMyNy45MDg2IDkwIDEwIDcyLjA5MTQgMTAgNTBDMTAgMjcuOTA4NiAyNy45MDg2IDEwIDUwIDEwWiIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNCIgZmlsbD0iIzMzMyIvPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjQwIiByPSI0IiBmaWxsPSIjMzMzIi8+CjxwYXRoIGQ9Ik00MCA2NVE1MCA3MCA2MCA2NSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KPHN2Zz4K" alt="Le Juste Prix" class="logo-img">
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
+                🎲 LANCER LA ROUE 🎲
+            </button>
+        </div>
+
+        <div class="result" id="result">
+            <p>✨ Cliquez sur le bouton pour faire tourner la roue et découvrir votre lot ! ✨</p>
+        </div>
+
+        <div class="contact-info">
+            <h4>📞 Réclamez votre lot</h4>
+            <p>Félicitations pour votre participation ! Notre équipe est à votre disposition 24h/24.</p>
+        </div>
+    </div>
+
+    <script>
+        let prizes = [
+            "1G OFFERT",    // Index 0 - Gagnant
+            "PERDU",        // Index 1
+            "PERDU",        // Index 2
+            "PERDU",        // Index 3
+            "PERDU",        // Index 4
+            "PERDU",        // Index 5
+            "50€",          // Index 6 - Gagnant
+            "PERDU",        // Index 7
+            "PERDU",        // Index 8
+            "PERDU",        // Index 9
+            "CIGARETTE",    // Index 10 - Gagnant
+            "PERDU"         // Index 11
+        ];
+
+        let winningIndexes = [0, 6, 10]; // Seulement 3 cases gagnantes
+        let losingIndexes = [1, 2, 3, 4, 5, 7, 8, 9, 11]; // 9 cases perdantes
+        let isSpinning = false;
+        let hasPlayed = false;
+
+        // Couleurs : gris pour PERDU, couleurs vives pour les gagnantes
+        const colors = [
+            '#FF1744',      // Rouge vif pour "1G OFFERT"
+            '#757575',      // Gris pour "PERDU"
+            '#757575',      // Gris pour "PERDU"
+            '#757575',      // Gris pour "PERDU"
+            '#757575',      // Gris pour "PERDU"
+            '#757575',      // Gris pour "PERDU"
+            '#00E676',      // Vert vif pour "50€"
+            '#757575',      // Gris pour "PERDU"
+            '#757575',      // Gris pour "PERDU"
+            '#757575',      // Gris pour "PERDU"
+            '#FF9800',      // Orange vif pour "CIGARETTE"
+            '#757575'       // Gris pour "PERDU"
+        ];
+
+        function createWheel() {
+            const wheel = document.getElementById('wheel');
+            const sectionAngle = 360 / prizes.length;
+            
+            wheel.innerHTML = '';
+            
+            prizes.forEach((prize, index) => {
+                // Créer une section SVG pour une vraie part de gâteau
+                const section = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                section.style.position = 'absolute';
+                section.style.top = '0';
+                section.style.left = '0';
+                section.style.width = '100%';
+                section.style.height = '100%';
+                section.style.pointerEvents = 'none';
+                
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                
+                // Calculer les coordonnées pour une vraie part de gâteau
+                const startAngle = (index * sectionAngle - 90) * Math.PI / 180;
+                const endAngle = ((index + 1) * sectionAngle - 90) * Math.PI / 180;
+                const centerX = 200;
+                const centerY = 200;
+                const radius = 195;
+                
+                const x1 = centerX + radius * Math.cos(startAngle);
+                const y1 = centerY + radius * Math.sin(startAngle);
+                const x2 = centerX + radius * Math.cos(endAngle);
+                const y2 = centerY + radius * Math.sin(endAngle);
+                
+                const largeArcFlag = sectionAngle > 180 ? 1 : 0;
+                
+                const pathData = [
+                    `M ${centerX} ${centerY}`,
+                    `L ${x1} ${y1}`,
+                    `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                    'Z'
+                ].join(' ');
+                
+                path.setAttribute('d', pathData);
+                path.setAttribute('fill', colors[index]);
+                path.setAttribute('stroke', '#ffffff');
+                path.setAttribute('stroke-width', '3');
+                
+                // Ajouter un effet spécial pour les cases gagnantes
+                if (winningIndexes.includes(index)) {
+                    path.setAttribute('filter', 'drop-shadow(0 0 8px rgba(255,255,255,0.8))');
+                }
+                
+                section.appendChild(path);
+                wheel.appendChild(section);
+                
+                // Ajouter le texte
+                const textDiv = document.createElement('div');
+                textDiv.className = 'section-text';
+                textDiv.textContent = prize;
+                
+                // Calculer la position pour aligner le texte
+                const textAngle = startAngle + (endAngle - startAngle) / 2;
+                const textRadius = 100;
+                const textX = 200 + textRadius * Math.cos(textAngle);
+                const textY = 200 + textRadius * Math.sin(textAngle);
+                
+                textDiv.style.position = 'absolute';
+                textDiv.style.left = textX + 'px';
+                textDiv.style.top = textY + 'px';
+                textDiv.style.transform = `translate(-50%, -50%) rotate(${(textAngle * 180 / Math.PI)}deg)`;
+                textDiv.style.transformOrigin = 'center';
+                
+                // Style spécial pour les gagnants
+                if (winningIndexes.includes(index)) {
+                    textDiv.style.fontSize = '16px';
+                    textDiv.style.fontWeight = '900';
+                }
+                
+                wheel.appendChild(textDiv);
+            });
+        }
+
+        function spinWheel() {
+            if (isSpinning || hasPlayed) return;
+            
+            isSpinning = true;
+            hasPlayed = true;
+            const spinBtn = document.getElementById('spinBtn');
+            const wheel = document.getElementById('wheel');
+            const result = document.getElementById('result');
+            
+            spinBtn.disabled = true;
+            spinBtn.textContent = '🎲 ROTATION... 🎲';
+            
+            // FORCER LA ROUE À TOUJOURS TOMBER SUR "PERDU"
+            const losingIndex = losingIndexes[Math.floor(Math.random() * losingIndexes.length)];
+            const sectionAngle = 360 / prizes.length;
+            
+            // Calculer l'angle exact pour tomber sur la case perdante choisie
+            const targetAngle = (losingIndex * sectionAngle) + (sectionAngle / 2);
+            const randomSpins = 4 + Math.floor(Math.random() * 3); // 4 à 6 tours complets
+            const finalRotation = (randomSpins * 360) + (360 - targetAngle);
+            
+            wheel.style.transform = `rotate(${finalRotation}deg)`;
+            
+            setTimeout(() => {
+                const winningPrize = prizes[losingIndex];
+                
+                // Toujours afficher le résultat "PERDU"
+                result.innerHTML = `
+                    <div>
+                        <h3>❌ Dommage !</h3>
+                        <p style="font-size: 18px; margin: 10px 0; color: #ff6b6b;"><strong>${winningPrize}</strong></p>
+                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">Vous n'avez pas gagné cette fois, mais ne vous découragez pas !</p>
+                        <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
+                            💬 Contacter le Support
+                        </a>
+                    </div>
+                `;
+                
+                // Animation de "presque gagné" pour créer de la frustration
+                showAlmostWonNotification();
+                
+                isSpinning = false;
+                spinBtn.disabled = true;
+                spinBtn.textContent = '❌ PARTIE TERMINÉE';
+                spinBtn.style.opacity = '0.6';
+            }, 4000);
+        }
+
+        function showAlmostWonNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-weight: bold;
+                animation: slideIn 0.3s ease-out;
+                border: 2px solid #fff;
+            `;
+            notification.innerHTML = '⚠️ Si proche de gagner ! Rejoignez le canal pour plus de chances !';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-weight: bold;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Auto-démarrage pour les nouveaux utilisateurs
+        function autoShowForNewUser() {
+            setTimeout(() => {
+                showNotification('🎊 Bienvenue ! Votre roulette gratuite vous attend !');
+            }, 1000);
+            
+            // Créer un effet de "presque gagné" visuel
+            setTimeout(() => {
+                const wheel = document.querySelector('.wheel-container');
+                wheel.style.animation = 'pulse 0.8s ease-in-out 2';
+                setTimeout(() => {
+                    wheel.style.animation = '';
+                }, 1600);
+            }, 2000);
+        }
+
+        // Initialisation
+        createWheel();
+
+        // Animation de bienvenue et auto-show pour nouveaux utilisateurs
+        window.addEventListener('load', () => {
+            showNotification('🎰 Roulette chargée avec succès !');
+            autoShowForNewUser();
+        });
+    </script>
+</body>
+</html>

@@ -411,22 +411,22 @@
 
     <script>
         let prizes = [
-            "1G OFFERT",    // Index 0 - Gagnant
+            "  1G OFFERT",    // Index 0 - Gagnant
             "PERDU",        // Index 1
             "PERDU",        // Index 2
             "PERDU",        // Index 3
-            "PERDU",        // Index 4
+            " GROS LOT",        // Index 4
             "PERDU",        // Index 5
-            "50€",          // Index 6 - Gagnant
+            " 50€",          // Index 6 - Gagnant
             "PERDU",        // Index 7
             "PERDU",        // Index 8
             "PERDU",        // Index 9
-            "CIGARETTE",    // Index 10 - Gagnant
+            "  CIGARETTE",    // Index 10 - Gagnant
             "PERDU"         // Index 11
         ];
 
-        let winningIndexes = [0, 6, 10]; // Seulement 3 cases gagnantes
-        let losingIndexes = [1, 2, 3, 4, 5, 7, 8, 9, 11]; // 9 cases perdantes
+        let winningIndexes = [0, 6, 10, 4]; // Seulement 3 cases gagnantes
+        let losingIndexes = [1, 2, 3, 5, 7, 8, 9, 11]; // 9 cases perdantes
         let isSpinning = false;
        let hasPlayed = localStorage.getItem('hasPlayed') === 'true';
 
@@ -437,9 +437,9 @@
             '#757575',      // Gris pour "PERDU"
             '#757575',      // Gris pour "PERDU"
             '#757575',      // Gris pour "PERDU"
+            '#FF1744',      // Gris pour "PERDU"
             '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#00E676',      // Vert vif pour "50€"
+            '#FF9800',      // Vert vif pour "50€"
             '#757575',      // Gris pour "PERDU"
             '#757575',      // Gris pour "PERDU"
             '#757575',      // Gris pour "PERDU"

@@ -409,82 +409,210 @@
         </div>
     </div>
 
-    <script>
-        let prizes = [
-            "1G OFFERT",    // Index 0 - Gagnant
-            "PERDU",        // Index 1
-            "PERDU",        // Index 2
-            "PERDU",        // Index 3
-            "PERDU",        // Index 4
-            "PERDU",        // Index 5
-            "50€",          // Index 6 - Gagnant
-            "PERDU",        // Index 7
-            "PERDU",        // Index 8
-            "PERDU",        // Index 9
-            "CIGARETTE",    // Index 10 - Gagnant
-            "PERDU"         // Index 11
-        ];
+   <!-- Début : Tout ton code HTML reste inchangé jusqu'au <script> -->
 
-        let winningIndexes = [0, 6, 10]; // Seulement 3 cases gagnantes
-        let losingIndexes = [1, 2, 3, 4, 5, 7, 8, 9, 11]; // 9 cases perdantes
-        let isSpinning = false;
-        let hasPlayed = false;
+<script>
+    let prizes = [
+        "1G OFFERT", "PERDU", "PERDU", "PERDU", "PERDU", "PERDU",
+        "50€", "PERDU", "PERDU", "PERDU", "CIGARETTE", "PERDU"
+    ];
 
-        // Couleurs : gris pour PERDU, couleurs vives pour les gagnantes
-        const colors = [
-            '#FF1744',      // Rouge vif pour "1G OFFERT"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#00E676',      // Vert vif pour "50€"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#FF9800',      // Orange vif pour "CIGARETTE"
-            '#757575'       // Gris pour "PERDU"
-        ];
+    let winningIndexes = [0, 6, 10];
+    let losingIndexes = [1, 2, 3, 4, 5, 7, 8, 9, 11];
+    let isSpinning = false;
+    let hasPlayed = localStorage.getItem('hasPlayed') === 'true';
 
-        function getWheelSize() {
-            const container = document.querySelector('.wheel-container');
-            return container.offsetWidth;
+    const colors = [
+        '#FF1744', '#757575', '#757575', '#757575', '#757575', '#757575',
+        '#00E676', '#757575', '#757575', '#757575', '#FF9800', '#757575'
+    ];
+
+    function getWheelSize() {
+        const container = document.querySelector('.wheel-container');
+        return container.offsetWidth;
+    }
+
+    function createWheel() {
+        const wheel = document.getElementById('wheel');
+        const sectionAngle = 360 / prizes.length;
+        const wheelSize = getWheelSize();
+        const centerX = wheelSize / 2;
+        const centerY = wheelSize / 2;
+        const radius = (wheelSize / 2) - 5;
+        const textRadius = wheelSize * 0.25;
+        
+        wheel.innerHTML = '';
+        
+        prizes.forEach((prize, index) => {
+            const section = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            section.style.position = 'absolute';
+            section.style.top = '0';
+            section.style.left = '0';
+            section.style.width = '100%';
+            section.style.height = '100%';
+            section.style.pointerEvents = 'none';
+            
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const startAngle = (index * sectionAngle - 90) * Math.PI / 180;
+            const endAngle = ((index + 1) * sectionAngle - 90) * Math.PI / 180;
+            const x1 = centerX + radius * Math.cos(startAngle);
+            const y1 = centerY + radius * Math.sin(startAngle);
+            const x2 = centerX + radius * Math.cos(endAngle);
+            const y2 = centerY + radius * Math.sin(endAngle);
+            const largeArcFlag = sectionAngle > 180 ? 1 : 0;
+            const pathData = [
+                `M ${centerX} ${centerY}`,
+                `L ${x1} ${y1}`,
+                `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                'Z'
+            ].join(' ');
+            path.setAttribute('d', pathData);
+            path.setAttribute('fill', colors[index]);
+            path.setAttribute('stroke', '#ffffff');
+            path.setAttribute('stroke-width', '3');
+
+            if (winningIndexes.includes(index)) {
+                path.setAttribute('filter', 'drop-shadow(0 0 8px rgba(255,255,255,0.8))');
+            }
+
+            section.appendChild(path);
+            wheel.appendChild(section);
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'section-text';
+            textDiv.textContent = prize;
+            const textAngle = startAngle + (endAngle - startAngle) / 2;
+            const textX = centerX + textRadius * Math.cos(textAngle);
+            const textY = centerY + textRadius * Math.sin(textAngle);
+            textDiv.style.left = textX + 'px';
+            textDiv.style.top = textY + 'px';
+            textDiv.style.transform = `translate(-50%, -50%) rotate(${(textAngle * 180 / Math.PI)}deg)`;
+            if (winningIndexes.includes(index)) {
+                textDiv.style.fontSize = `clamp(12px, ${wheelSize * 0.04}px, 16px)`;
+                textDiv.style.fontWeight = '900';
+            }
+            wheel.appendChild(textDiv);
+        });
+    }
+
+    function spinWheel() {
+        if (isSpinning || hasPlayed) return;
+
+        isSpinning = true;
+        hasPlayed = true;
+        localStorage.setItem('hasPlayed', 'true');
+
+        const spinBtn = document.getElementById('spinBtn');
+        const wheel = document.getElementById('wheel');
+        const result = document.getElementById('result');
+
+        spinBtn.disabled = true;
+        spinBtn.textContent = 'ROTATION...';
+
+        const losingIndex = losingIndexes[Math.floor(Math.random() * losingIndexes.length)];
+        const sectionAngle = 360 / prizes.length;
+        const targetAngle = (losingIndex * sectionAngle) + (sectionAngle / 2);
+        const randomSpins = 4 + Math.floor(Math.random() * 3);
+        const finalRotation = (randomSpins * 360) + (360 - targetAngle);
+
+        wheel.style.transform = `rotate(${finalRotation}deg)`;
+
+        setTimeout(() => {
+            const winningPrize = prizes[losingIndex];
+            result.innerHTML = `
+                <div>
+                    <h3>❌ Dommage !</h3>
+                    <p style="font-size: clamp(16px, 4vw, 18px); margin: 8px 0; color: #ff6b6b;"><strong>${winningPrize}</strong></p>
+                    <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.9; margin-bottom: 12px;">Vous n'avez pas gagné cette fois, peut-être une prochaine fois !</p>
+                    <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
+                        💬 Contacter le Support
+                    </a>
+                </div>
+            `;
+            showAlmostWonNotification();
+            isSpinning = false;
+            spinBtn.disabled = true;
+            spinBtn.textContent = '❌ PARTIE TERMINÉE';
+            spinBtn.style.opacity = '0.6';
+        }, 4000);
+    }
+
+    function showAlmostWonNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.background = 'linear-gradient(45deg, #ff6b6b, #ee5a24)';
+        notification.style.border = '2px solid #fff';
+        notification.style.animation = 'slideIn 0.3s ease-out';
+        notification.innerHTML = '⚠️ Si proche de gagner ! Restez actif sur le canal pour plus de mini-jeu quotidien !';
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.background = 'linear-gradient(45deg, #00d2ff, #3a7bd5)';
+        notification.style.animation = 'slideIn 0.3s ease-out';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    function autoShowForNewUser() {
+        if (!hasPlayed) {
+            setTimeout(() => {
+                showNotification('🎊 Vous Possédez actuellement 1 TOUR GRATUIT !');
+            }, 1000);
+            setTimeout(() => {
+                const wheel = document.querySelector('.wheel-container');
+                wheel.style.animation = 'pulse 0.8s ease-in-out 2';
+                setTimeout(() => {
+                    wheel.style.animation = '';
+                }, 1600);
+            }, 2000);
         }
+    }
 
-        function createWheel() {
-            const wheel = document.getElementById('wheel');
-            const sectionAngle = 360 / prizes.length;
-            const wheelSize = getWheelSize();
-            const centerX = wheelSize / 2;
-            const centerY = wheelSize / 2;
-            const radius = (wheelSize / 2) - 5;
-            const textRadius = wheelSize * 0.25; // Responsive text radius
-            
-            wheel.innerHTML = '';
-            
-            prizes.forEach((prize, index) => {
-                // Créer une section SVG pour une vraie part de gâteau
-                const section = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                section.style.position = 'absolute';
-                section.style.top = '0';
-                section.style.left = '0';
-                section.style.width = '100%';
-                section.style.height = '100%';
-                section.style.pointerEvents = 'none';
-                
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                
-                // Calculer les coordonnées pour une vraie part de gâteau
-                const startAngle = (index * sectionAngle - 90) * Math.PI / 180;
-                const endAngle = ((index + 1) * sectionAngle - 90) * Math.PI / 180;
-                
-                const x1 = centerX + radius * Math.cos(startAngle);
-                const y1 = centerY + radius * Math.sin(startAngle);
-                const x2 = centerX + radius * Math.cos(endAngle);
-                const y2 = centerY + radius * Math.sin(endAngle);
-                
-                const largeArcFlag = sectionAngle > 180 ? 1 : 0;
-                
+    function handleResize() {
+        createWheel();
+    }
+
+    window.addEventListener('load', () => {
+        createWheel();
+        autoShowForNewUser();
+        showNotification('🎰 Veuillez patienter... !');
+
+        // Blocage si l'utilisateur a déjà joué
+        if (hasPlayed) {
+            const spinBtn = document.getElementById('spinBtn');
+            const result = document.getElementById('result');
+            spinBtn.disabled = true;
+            spinBtn.textContent = '❌ DÉJÀ JOUÉ';
+            spinBtn.style.opacity = '0.6';
+            result.innerHTML = `
+                <div>
+                    <h3>🔒 Accès limité</h3>
+                    <p style="font-size: clamp(14px, 3vw, 16px); margin: 8px 0;">Vous avez déjà utilisé votre tour.</p>
+                    <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
+                        💬 Contacter le Support
+                    </a>
+                </div>
+            `;
+        }
+    });
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(handleResize, 100);
+    });
+</script>
+
                 const pathData = [
                     `M ${centerX} ${centerY}`,
                     `L ${x1} ${y1}`,

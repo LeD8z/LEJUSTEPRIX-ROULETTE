@@ -428,7 +428,8 @@
         let winningIndexes = [0, 6, 10]; // Seulement 3 cases gagnantes
         let losingIndexes = [1, 2, 3, 4, 5, 7, 8, 9, 11]; // 9 cases perdantes
         let isSpinning = false;
-        let hasPlayed = false;
+       let hasPlayed = localStorage.getItem('hasPlayed') === 'true';
+
 
         // Couleurs : gris pour PERDU, couleurs vives pour les gagnantes
         const colors = [
@@ -536,6 +537,8 @@
             
             isSpinning = true;
             hasPlayed = true;
+localStorage.setItem('hasPlayed', 'true');
+
             const spinBtn = document.getElementById('spinBtn');
             const wheel = document.getElementById('wheel');
             const result = document.getElementById('result');
@@ -633,15 +636,34 @@
         createWheel();
 
         // Écouteurs d'événements
-        window.addEventListener('load', () => {
-            showNotification('🎰 Veuillez patientez... !');
-            autoShowForNewUser();
-        });
+       window.addEventListener('load', () => {
+    showNotification('🎰 Veuillez patientez... !');
+    autoShowForNewUser();
 
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', () => {
-            setTimeout(handleResize, 100);
-        });
+    // ✅ Blocage si l'utilisateur a déjà joué
+    if (localStorage.getItem('hasPlayed') === 'true') {
+        const spinBtn = document.getElementById('spinBtn');
+        const result = document.getElementById('result');
+        spinBtn.disabled = true;
+        spinBtn.textContent = '❌ DÉJÀ JOUÉ';
+        spinBtn.style.opacity = '0.6';
+        result.innerHTML = `
+            <div>
+                <h3>🔒 Accès limité</h3>
+                <p style="font-size: clamp(14px, 3vw, 16px); margin: 8px 0;">Vous avez déjà utilisé votre tour.</p>
+                <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
+                    💬 Contacter le Support
+                </a>
+            </div>
+        `;
+    }
+});
+
+window.addEventListener('resize', handleResize);
+window.addEventListener('orientationchange', () => {
+    setTimeout(handleResize, 100);
+});
+
     </script>
 </body>
-</html>x
+</html>

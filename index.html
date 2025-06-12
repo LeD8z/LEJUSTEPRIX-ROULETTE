@@ -642,30 +642,6 @@
         window.addEventListener('orientationchange', () => {
             setTimeout(handleResize, 100);
         });
-
-         // Blocage si l'utilisateur a déjà joué
-        if (hasPlayed) {
-            const spinBtn = document.getElementById('spinBtn');
-            const result = document.getElementById('result');
-            spinBtn.disabled = true;
-            spinBtn.textContent = '❌ DÉJÀ JOUÉ';
-            spinBtn.style.opacity = '0.6';
-            result.innerHTML = `
-                <div>
-                    <h3>🔒 Accès limité</h3>
-                    <p style="font-size: clamp(14px, 3vw, 16px); margin: 8px 0;">Vous avez déjà utilisé votre tour.</p>
-                    <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
-                        💬 Contacter le Support
-                    </a>
-                </div>
-            `;
-        }
-    });
-
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', () => {
-        setTimeout(handleResize, 100);
-    });
-</script>
+    </script>
 </body>
 </html>

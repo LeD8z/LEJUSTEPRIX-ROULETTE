@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart-Commerce Guide - Connor Hamilton</title>
     <style>
-        /* --- Reset et base --- */
         * {
             margin: 0;
             padding: 0;
@@ -19,12 +18,6 @@
             overflow-x: hidden;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* --- Animation des pièces d'échecs --- */
         .chess-piece {
             position: absolute;
             font-size: 40px;
@@ -43,14 +36,100 @@
             50% { transform: translateY(-20px) rotate(5deg); }
         }
 
-        /* --- Header --- */
+        .navigation {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .nav-item:hover {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.2);
+        }
+
+        .nav-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item.active {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger-line {
+            width: 25px;
+            height: 3px;
+            background: #d4af37;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
         .header {
             text-align: center;
-            padding: 40px 20px 20px;
+            padding: 120px 20px 40px;
             background: linear-gradient(45deg, #d4af37, #f4e184, #d4af37);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-top: 0;
         }
 
         .header h1 {
@@ -70,45 +149,6 @@
             margin-bottom: 20px;
         }
 
-        /* --- Navigation / sections rapides --- */
-        .quick-sections {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-            padding: 0 20px;
-        }
-
-        .quick-section {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 15px;
-            padding: 20px 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1 1 150px;
-        }
-
-        .quick-section:hover {
-            background: rgba(212, 175, 55, 0.2);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .quick-section-icon {
-            font-size: 30px;
-            margin-bottom: 10px;
-            color: #d4af37;
-        }
-
-        .quick-section-label {
-            font-weight: bold;
-            color: #fff;
-        }
-
-        /* --- Hero Section --- */
         .hero-section {
             display: flex;
             align-items: center;
@@ -160,7 +200,6 @@
             z-index: -1;
         }
 
-        /* --- Info Section --- */
         .info-section {
             text-align: left;
         }
@@ -207,7 +246,6 @@
             color: #d4af37;
         }
 
-        /* --- CTA Section --- */
         .cta-section {
             display: flex;
             flex-direction: column;
@@ -285,7 +323,6 @@
             color: #888;
         }
 
-        /* --- Interactive Chess --- */
         .interactive-chess {
             position: fixed;
             bottom: 20px;
@@ -309,7 +346,6 @@
             box-shadow: 0 10px 20px rgba(212, 175, 55, 0.5);
         }
 
-        /* --- Modal --- */
         .modal {
             display: none;
             position: fixed;
@@ -341,12 +377,316 @@
             color: #d4af37;
         }
 
-        /* --- Stats --- */
-        .stats-section {
-            background: rgba(212, 175, 55, 0.1);
-            padding: 60px 20px;
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(26, 26, 26, 0.98);
+                flex-direction: column;
+                justify-content: start;
+                padding-top: 50px;
+                transition: left 0.3s ease;
+                gap: 20px;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .tagline {
+                font-size: 1.4rem;
+            }
+            
+            .info-section {
+                text-align: center;
+            }
+
+            .nav-item {
+                width: 80%;
+                padding: 20px;
+                background: rgba(212, 175, 55, 0.1);
+                margin-bottom: 10px;
+                border-radius: 15px;
+            }
+        }
+
+        .section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 60vh;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
             text-align: center;
-            margin: 80px 0;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(45, 45, 45, 0.5) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            border-color: #d4af37;
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .plan-card.featured {
+            border-color: #d4af37;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(45, 45, 45, 0.7) 100%);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #d4af37;
+            color: #1a1a1a;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 10px 0;
+            color: #e0e0e0;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .plan-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .contact-info {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            border-left: 5px solid #d4af37;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateX(10px);
+        }
+
+        .contact-icon {
+            font-size: 24px;
+            color: #d4af37;
+            width: 40px;
+            text-align: center;
+        }
+
+        .contact-form {
+            background: rgba(45, 45, 45, 0.5);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .support-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .support-card {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .support-card:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(45, 45, 45, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .tool-icon {
+            font-size: 48px;
+            color: #d4af37;
+            margin-bottom: 20px;
+        }
+
+        .tool-name {
+            font-size: 1.3rem;
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .tool-description {
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tool-button {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tool-button:hover {
+            background: #d4af37;
+            color: #1a1a1a;
         }
 
         .stats-grid {
@@ -373,69 +713,325 @@
             color: #e0e0e0;
             margin-top: 10px;
         }
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-            .content-wrapper {
-                grid-template-columns: 1fr;
-                gap: 40px;
-                text-align: center;
-            }
-            
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .tagline {
-                font-size: 1.4rem;
-            }
-            
-            .info-section {
-                text-align: center;
-            }
-            
-            .quick-sections {
-                gap: 15px;
-            }
-        }
     </style>
 </head>
 <body>
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="logo">♔ Smart Commerce</div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="nav-item active" onclick="showSection('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">EBOOK</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('plans')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">PLANS</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('tools')">
+                    <span class="nav-icon">🛠️</span>
+                    <span class="nav-text">OUTILS</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('support')">
+                    <span class="nav-icon">🎯</span>
+                    <span class="nav-text">SUPPORT</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('contact')">
+                    <span class="nav-icon">📞</span>
+                    <span class="nav-text">CONTACT</span>
+                </a>
+            </div>
+            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+        </div>
+    </nav>
+
     <div class="chess-piece">♔</div>
     <div class="chess-piece">♕</div>
     <div class="chess-piece">♖</div>
     <div class="chess-piece">♗</div>
 
-    <header class="header">
-        <div class="author">CONNOR HAMILTON</div>
-        <h1>SMART-COMMERCE GUIDE</h1>
-    </header>
+    <!-- Section EBOOK (Page d'accueil) -->
+    <div id="home" class="section active">
+        <header class="header">
+            <div class="author">CONNOR HAMILTON</div>
+            <h1>SMART-COMMERCE GUIDE</h1>
+        </header>
 
-    <!-- --- Quick Sections --- -->
-    <div class="quick-sections">
-        <div class="quick-section" onclick="alert('Plan du site')">
-            <div class="quick-section-icon">🗂️</div>
-            <div class="quick-section-label">Plan</div>
+        <main class="hero-section">
+            <div class="content-wrapper">
+                <div class="book-cover">
+                    <div class="chess-board-bg"></div>
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDQwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMWExYTFhIi8+CjxyZWN0IHk9IjAiIHdpZHRoPSI0MDAiIGhlaWdodD0iODAiIGZpbGw9IiNkNGFmMzciLz4KPHRleHQgeD0iMjAwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzFhMWExYSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q09OTk9SIEhBTUlMVE9OPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjE4MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2Q0YWYzNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U01BUlQtPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2Q0YWYzNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q09NTUVSQ0U8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMzAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZDRhZjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HVUlERTwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFEIFdJVEggUFVSUE9TRSwgTElGVCBPVEhFUlMsIEFORDwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFWRSBBIExARUdBQ1kgVEhBVCBMQVNUUzwvdGV4dD4KPHN2ZyB4PSIxNzAiIHk9IjQyMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjgwIj4KPHA+dGggZD0iTTMwIDEwYzEwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMCIgZmlsbD0iI2Q0YWYzNyIvPgo8L3N2Zz4KPC9zdmc+" alt="Smart-Commerce Guide" class="book-image">
+                </div>
+
+                <div class="info-section">
+                    <h2 class="tagline">Dominez le commerce digital comme un maître d'échecs</h2>
+                    
+                    <p class="description">
+                        Apprenez les stratégies gagnantes pour transformer votre commerce traditionnel en empire digital. Chaque mouvement compte, chaque décision façonne votre succès.
+                    </p>
+
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">♔</span>
+                            <div>
+                                <strong>Stratégies de leadership</strong><br>
+                                Menez votre équipe vers le succès digital
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">♕</span>
+                            <div>
+                                <strong>Transformation digitale</strong><br>
+                                Méthodologies éprouvées pour réussir votre transition
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">♖</span>
+                            <div>
+                                <strong>ROI optimisé</strong><br>
+                                Maximisez vos investissements technologiques
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">♗</span>
+                            <div>
+                                <strong>Vision long terme</strong><br>
+                                Construisez un héritage durable et profitable
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cta-section">
+                        <div class="price">
+                            <span class="old-price">49€</span>
+                            <span class="new-price">29€</span>
+                            <span class="discount">-40%</span>
+                        </div>
+                        
+                        <button class="buy-button" onclick="showModal()">
+                            Télécharger maintenant
+                        </button>
+                        
+                        <p class="guarantee">
+                            ✓ Satisfaction garantie 30 jours<br>
+                            ✓ Accès immédiat après achat<br>
+                            ✓ Format PDF optimisé mobile
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="2500">0</span>
+                    <div class="stat-label">Entrepreneurs formés</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="89">0</span>
+                    <div class="stat-label">% de réussite</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="156">0</span>
+                    <div class="stat-label">Pages de contenu</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="24">0</span>
+                    <div class="stat-label">Études de cas</div>
+                </div>
+            </div>
+        </section>
+    </div>iBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2Q0YWYzNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q09NTUVSQ0U8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMzAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZDRhZjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HVUlERTwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFEIFdJVEggUFVSUE9TRSwgTElGVCBPVEhFUlMsIEFORDwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFWRSBBIExARUdBQ1kgVEhBVCBMQVNUUzwvdGV4dD4KPHN2ZyB4PSIxNzAiIHk9IjQyMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjgwIj4KPHA+dGggZD0iTTMwIDEwYzEwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMCIgZmlsbD0iI2Q0YWYzNyIvPgo8L3N2Zz4KPC9zdmc+" alt="Smart-Commerce Guide" class="book-image">
+            </div>
+
+            <div class="info-section">
+                <h2 class="tagline">Dominez le commerce digital comme un maître d'échecs</h2>
+                
+                <p class="description">
+                    Apprenez les stratégies gagnantes pour transformer votre commerce traditionnel en empire digital. Chaque mouvement compte, chaque décision façonne votre succès.
+                </p>
+
+                <div class="features">
+                    <div class="feature">
+                        <span class="feature-icon">♔</span>
+                        <div>
+                            <strong>Stratégies de leadership</strong><br>
+                            Menez votre équipe vers le succès digital
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">♕</span>
+                        <div>
+                            <strong>Transformation digitale</strong><br>
+                            Méthodologies éprouvées pour réussir votre transition
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">♖</span>
+                        <div>
+                            <strong>ROI optimisé</strong><br>
+                            Maximisez vos investissements technologiques
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">♗</span>
+                        <div>
+                            <strong>Vision long terme</strong><br>
+                            Construisez un héritage durable et profitable
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <div class="price">
+                        <span class="old-price">49€</span>
+                        <span class="new-price">29€</span>
+                        <span class="discount">-40%</span>
+                    </div>
+                    
+                    <button class="buy-button" onclick="showModal()">
+                        Télécharger maintenant
+                    </button>
+                    
+                    <p class="guarantee">
+                        ✓ Satisfaction garantie 30 jours<br>
+                        ✓ Accès immédiat après achat<br>
+                        ✓ Format PDF optimisé mobile
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="quick-section" onclick="alert('Contactez-nous')">
-            <div class="quick-section-icon">📞</div>
-            <div class="quick-section-label">Nous contacter</div>
+    </main>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number" data-target="2500">0</span>
+                <div class="stat-label">Entrepreneurs formés</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="89">0</span>
+                <div class="stat-label">% de réussite</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="156">0</span>
+                <div class="stat-label">Pages de contenu</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="24">0</span>
+                <div class="stat-label">Études de cas</div>
+            </div>
         </div>
-        <div class="quick-section" onclick="alert('Support technique')">
-            <div class="quick-section-icon">🛠️</div>
-            <div class="quick-section-label">Support</div>
-        </div>
-        <div class="quick-section" onclick="alert('Télécharger Ebook')">
-            <div class="quick-section-icon">📖</div>
-            <div class="quick-section-label">Ebook</div>
-        </div>
-        <div class="quick-section" onclick="alert('Accéder aux outils')">
-            <div class="quick-section-icon">⚙️</div>
-            <div class="quick-section-label">Outil</div>
+    </section>
+
+    <div class="interactive-chess" onclick="showChessModal()">
+        ♔
+    </div>
+
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 style="color: #d4af37; margin-bottom: 20px;">Échec et Mat !</h2>
+            <p style="margin-bottom: 20px;">Vous êtes sur le point de faire le mouvement gagnant pour votre entreprise.</p>
+            <p style="margin-bottom: 30px; color: #888;">Votre téléchargement commencera automatiquement...</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button style="padding: 10px 20px; background: #d4af37; color: #1a1a1a; border: none; border-radius: 5px; cursor: pointer;" onclick="simulateDownload()">Confirmer l'achat</button>
+                <button style="padding: 10px 20px; background: transparent; color: white; border: 1px solid #666; border-radius: 5px; cursor: pointer;" onclick="closeModal()">Annuler</button>
+            </div>
         </div>
     </div>
 
-    <!-- Le reste du site (Hero Section, Stats, Modals, JS) reste identique -->
+    <div id="chessModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeChessModal()">&times;</span>
+            <h2 style="color: #d4af37; margin-bottom: 20px;">La Stratégie du Succès</h2>
+            <p style="margin-bottom: 20px;">"Dans les échecs comme dans les affaires, la victoire appartient à celui qui pense plusieurs coups à l'avance."</p>
+            <p style="color: #888;">- Connor Hamilton</p>
+        </div>
+    </div>
 
+    <script>
+        // Animation des statistiques
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 100;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 20);
+            });
+        }
+
+        // Observer pour déclencher l'animation des stats
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        observer.observe(document.querySelector('.stats-section'));
+
+        // Fonctions modales
+        function showModal() {
+            document.getElementById('purchaseModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        function showChessModal() {
+            document.getElementById('chessModal').style.display = 'flex';
+        }
+
+        function closeChessModal() {
+            document.getElementById('chessModal').style.display = 'none';
+        }
+
+        function simulateDownload() {
+            alert('Merci pour votre achat ! Votre ebook sera disponible dans quelques instants.');
+            closeModal();
+        }
+
+        // Fermeture modale en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const purchaseModal = document.getElementById('purchaseModal');
+            const chessModal = document.getElementById('chessModal');
+            if (event.target === purchaseModal) {
+                closeModal();
+            }
+            if (event.target === chessModal) {
+                closeChessModal();
+            }
+        }
+
+        // Animation de parallaxe légère
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const chessElements = document.querySelectorAll('.chess-piece');
+            chessElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+            });
+        });
+    </script>
 </body>
 </html>

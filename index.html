@@ -75,25 +75,50 @@
             align-items: center;
             color: white;
             text-decoration: none;
-            transition: all 0.3s ease;
-            padding: 10px 15px;
-            border-radius: 10px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 12px 18px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
         }
 
         .nav-item:hover {
-            color: #d4af37;
-            background: rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
+            color: #f4e184;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(244, 225, 132, 0.1));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
         }
 
         .nav-icon {
             font-size: 24px;
             margin-bottom: 5px;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            color: #d4af37;
         }
 
         .nav-item:hover .nav-icon {
-            transform: scale(1.2);
+            transform: scale(1.2) rotate(15deg);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .nav-item.active .nav-icon {
+            color: #f4e184;
+            transform: scale(1.1);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
         }
 
         .nav-text {
@@ -103,8 +128,28 @@
         }
 
         .nav-item.active {
-            color: #d4af37;
-            background: rgba(212, 175, 55, 0.15);
+            color: #f4e184;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(244, 225, 132, 0.2));
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37, #f4e184, #d4af37);
+            border-radius: 2px;
+            animation: activeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes activeGlow {
+            0% { opacity: 0.7; transform: translateX(-50%) scaleX(1); }
+            100% { opacity: 1; transform: translateX(-50%) scaleX(1.1); }
         }
 
         .mobile-menu-toggle {
@@ -684,9 +729,11 @@
             transition: all 0.3s ease;
         }
 
-        .tool-button:hover {
-            background: #d4af37;
-            color: #1a1a1a;
+        .stats-section {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 60px 20px;
+            text-align: center;
+            margin: 80px 0;
         }
 
         .stats-grid {
@@ -721,23 +768,23 @@
             <div class="logo">♔ Smart Commerce</div>
             <div class="nav-menu" id="navMenu">
                 <a href="#" class="nav-item active" onclick="showSection('home')">
-                    <span class="nav-icon">🏠</span>
+                    <span class="nav-icon">♔</span>
                     <span class="nav-text">EBOOK</span>
                 </a>
                 <a href="#" class="nav-item" onclick="showSection('plans')">
-                    <span class="nav-icon">📊</span>
+                    <span class="nav-icon">♕</span>
                     <span class="nav-text">PLANS</span>
                 </a>
                 <a href="#" class="nav-item" onclick="showSection('tools')">
-                    <span class="nav-icon">🛠️</span>
+                    <span class="nav-icon">♖</span>
                     <span class="nav-text">OUTILS</span>
                 </a>
                 <a href="#" class="nav-item" onclick="showSection('support')">
-                    <span class="nav-icon">🎯</span>
+                    <span class="nav-icon">♗</span>
                     <span class="nav-text">SUPPORT</span>
                 </a>
                 <a href="#" class="nav-item" onclick="showSection('contact')">
-                    <span class="nav-icon">📞</span>
+                    <span class="nav-icon">♘</span>
                     <span class="nav-text">CONTACT</span>
                 </a>
             </div>
@@ -846,6 +893,25 @@
                     <div class="stat-label">Études de cas</div>
                 </div>
             </div>
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="2500">0</span>
+                    <div class="stat-label">Entrepreneurs formés</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="89">0</span>
+                    <div class="stat-label">% de réussite</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="156">0</span>
+                    <div class="stat-label">Pages de contenu</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="24">0</span>
+                    <div class="stat-label">Études de cas</div>
+                </div>
+            </div>
         </section>
     </div>iBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2Q0YWYzNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q09NTUVSQ0U8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMzAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZDRhZjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HVUlERTwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFEIFdJVEggUFVSUE9TRSwgTElGVCBPVEhFUlMsIEFORDwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFWRSBBIExARUdBQ1kgVEhBVCBMQVNUUzwvdGV4dD4KPHN2ZyB4PSIxNzAiIHk9IjQyMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjgwIj4KPHA+dGggZD0iTTMwIDEwYzEwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMCIgZmlsbD0iI2Q0YWYzNyIvPgo8L3N2Zz4KPC9zdmc+" alt="Smart-Commerce Guide" class="book-image">
             </div>
@@ -909,26 +975,238 @@
         </div>
     </main>
 
-    <section class="stats-section">
-        <div class="stats-grid">
-            <div class="stat-item">
-                <span class="stat-number" data-target="2500">0</span>
-                <div class="stat-label">Entrepreneurs formés</div>
+    <!-- Section PLANS -->
+    <div id="plans" class="section">
+        <div class="section-header">
+            <h2 class="section-title">♕ Plans & Tarifs</h2>
+            <p class="section-subtitle">Choisissez votre stratégie gagnante pour dominer le marché digital</p>
+        </div>
+        
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div class="plan-name">♙ Débutant</div>
+                <div class="plan-price">29€</div>
+                <ul class="plan-features">
+                    <li>Ebook complet (156 pages)</li>
+                    <li>Guide de transformation digitale</li>
+                    <li>24 études de cas détaillées</li>
+                    <li>Templates de stratégie</li>
+                    <li>Support email</li>
+                </ul>
+                <button class="buy-button" onclick="showModal()">Choisir ce plan</button>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="89">0</span>
-                <div class="stat-label">% de réussite</div>
+            
+            <div class="plan-card featured">
+                <div class="plan-badge">♔ POPULAIRE</div>
+                <div class="plan-name">♖ Professionnel</div>
+                <div class="plan-price">79€</div>
+                <ul class="plan-features">
+                    <li>Tout du plan Débutant</li>
+                    <li>Masterclass vidéo (3h)</li>
+                    <li>Outils d'analyse personnalisés</li>
+                    <li>Session de coaching 1:1 (1h)</li>
+                    <li>Communauté privée</li>
+                    <li>Support prioritaire</li>
+                </ul>
+                <button class="buy-button" onclick="showModal()">Choisir ce plan</button>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="156">0</span>
-                <div class="stat-label">Pages de contenu</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="24">0</span>
-                <div class="stat-label">Études de cas</div>
+            
+            <div class="plan-card">
+                <div class="plan-name">♕ Expert</div>
+                <div class="plan-price">149€</div>
+                <ul class="plan-features">
+                    <li>Tout du plan Professionnel</li>
+                    <li>Audit personnalisé de votre business</li>
+                    <li>3 sessions de coaching (3h)</li>
+                    <li>Plan d'action sur mesure</li>
+                    <li>Suivi mensuel (6 mois)</li>
+                    <li>Accès aux mises à jour à vie</li>
+                </ul>
+                <button class="buy-button" onclick="showModal()">Choisir ce plan</button>
             </div>
         </div>
-    </section>
+    </div>
+
+    <!-- Section OUTILS -->
+    <div id="tools" class="section">
+        <div class="section-header">
+            <h2 class="section-title">♖ Outils Stratégiques</h2>
+            <p class="section-subtitle">Des outils puissants pour accélérer votre transformation digitale</p>
+        </div>
+        
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">♔</div>
+                <h3 class="tool-name">Calculateur ROI</h3>
+                <p class="tool-description">Évaluez la rentabilité de vos investissements digitaux avec précision. Analysez les coûts, revenus et projections.</p>
+                <button class="tool-button" onclick="showToolModal('roi')">Utiliser l'outil</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">♕</div>
+                <h3 class="tool-name">Audit Digital</h3>
+                <p class="tool-description">Diagnostic complet de votre présence digitale. Identifiez vos forces, faiblesses et opportunités.</p>
+                <button class="tool-button" onclick="showToolModal('audit')">Lancer l'audit</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">♖</div>
+                <h3 class="tool-name">Planificateur Stratégique</h3>
+                <p class="tool-description">Créez votre roadmap de transformation en 90 jours. Définissez objectifs, étapes et KPIs.</p>
+                <button class="tool-button" onclick="showToolModal('planner')">Planifier</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">♗</div>
+                <h3 class="tool-name">Simulateur de Croissance</h3>
+                <p class="tool-description">Projetez votre croissance avec différents scenarii. Optimisez vos décisions stratégiques.</p>
+                <button class="tool-button" onclick="showToolModal('growth')">Simuler</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">♘</div>
+                <h3 class="tool-name">Tracker de Performance</h3>
+                <p class="tool-description">Suivez vos KPIs en temps réel. Tableaux de bord interactifs et alertes personnalisées.</p>
+                <button class="tool-button" onclick="showToolModal('tracker')">Tracker</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">♙</div>
+                <h3 class="tool-name">Générateur de Stratégie</h3>
+                <p class="tool-description">IA qui génère des stratégies personnalisées selon votre secteur et objectifs.</p>
+                <button class="tool-button" onclick="showToolModal('generator')">Générer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section SUPPORT -->
+    <div id="support" class="section">
+        <div class="section-header">
+            <h2 class="section-title">♗ Centre d'Aide</h2>
+            <p class="section-subtitle">Nous sommes là pour vous accompagner dans votre réussite</p>
+        </div>
+        
+        <div class="support-categories">
+            <div class="support-card" onclick="showSupportModal('faq')">
+                <div class="tool-icon">♔</div>
+                <h3 class="tool-name">FAQ Stratégique</h3>
+                <p class="tool-description">Réponses aux questions les plus fréquentes sur la transformation digitale.</p>
+                <button class="tool-button">Consulter</button>
+            </div>
+            
+            <div class="support-card" onclick="showSupportModal('guides')">
+                <div class="tool-icon">♕</div>
+                <h3 class="tool-name">Guides Pratiques</h3>
+                <p class="tool-description">Tutoriels pas à pas pour implémenter vos stratégies digitales.</p>
+                <button class="tool-button">Découvrir</button>
+            </div>
+            
+            <div class="support-card" onclick="showSupportModal('community')">
+                <div class="tool-icon">♖</div>
+                <h3 class="tool-name">Communauté</h3>
+                <p class="tool-description">Échangez avec d'autres entrepreneurs et partagez vos expériences.</p>
+                <button class="tool-button">Rejoindre</button>
+            </div>
+            
+            <div class="support-card" onclick="showSupportModal('coaching')">
+                <div class="tool-icon">♗</div>
+                <h3 class="tool-name">Coaching Personnalisé</h3>
+                <p class="tool-description">Sessions individuelles pour accélérer votre transformation.</p>
+                <button class="tool-button">Réserver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section CONTACT -->
+    <div id="contact" class="section">
+        <div class="section-header">
+            <h2 class="section-title">♘ Nous Contacter</h2>
+            <p class="section-subtitle">Une question ? Un projet ? Discutons de votre stratégie gagnante</p>
+        </div>
+        
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h3 style="color: #d4af37; margin-bottom: 30px;">♔ Informations de Contact</h3>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">♕</div>
+                    <div>
+                        <strong>Email Stratégique</strong><br>
+                        contact@smart-commerce.fr<br>
+                        <em>Réponse sous 24h</em>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">♖</div>
+                    <div>
+                        <strong>Coaching Direct</strong><br>
+                        +33 1 23 45 67 89<br>
+                        <em>Lun-Ven 9h-18h</em>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">♗</div>
+                    <div>
+                        <strong>Adresse Siège</strong><br>
+                        123 Avenue des Champs-Élysées<br>
+                        <em>75008 Paris, France</em>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">♘</div>
+                    <div>
+                        <strong>Réseaux Sociaux</strong><br>
+                        LinkedIn • Twitter • YouTube<br>
+                        <em>@SmartCommerce</em>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h3 style="color: #d4af37; margin-bottom: 30px;">♙ Message Stratégique</h3>
+                
+                <form onsubmit="handleContactForm(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nom & Prénom</label>
+                        <input type="text" class="form-input" required placeholder="Votre nom complet">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email Professionnel</label>
+                        <input type="email" class="form-input" required placeholder="votre@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Entreprise & Secteur</label>
+                        <input type="text" class="form-input" placeholder="Nom de votre entreprise">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Objectif Stratégique</label>
+                        <select class="form-input">
+                            <option>Transformation digitale</option>
+                            <option>Optimisation ROI</option>
+                            <option>Coaching personnalisé</option>
+                            <option>Audit complet</option>
+                            <option>Autre projet</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Votre Message</label>
+                        <textarea class="form-input form-textarea" placeholder="Décrivez votre projet et vos défis actuels..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="buy-button" style="width: 100%;">
+                        Envoyer le Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="interactive-chess" onclick="showChessModal()">
         ♔
@@ -947,12 +1225,17 @@
         </div>
     </div>
 
-    <div id="chessModal" class="modal">
+    <div id="toolModal" class="modal">
+        <div class="modal-content tool-modal">
+            <span class="close-modal" onclick="closeToolModal()">&times;</span>
+            <div id="toolContent"></div>
+        </div>
+    </div>
+
+    <div id="supportModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeChessModal()">&times;</span>
-            <h2 style="color: #d4af37; margin-bottom: 20px;">La Stratégie du Succès</h2>
-            <p style="margin-bottom: 20px;">"Dans les échecs comme dans les affaires, la victoire appartient à celui qui pense plusieurs coups à l'avance."</p>
-            <p style="color: #888;">- Connor Hamilton</p>
+            <span class="close-modal" onclick="closeSupportModal()">&times;</span>
+            <div id="supportContent"></div>
         </div>
     </div>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le juste Prix</title>
+    <title>Smart-Commerce Guide - Connor Hamilton</title>
     <style>
         * {
             margin: 0;
@@ -13,677 +13,536 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
             color: white;
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            padding: 0 10px;
+        .chess-piece {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
         }
 
-        h1 {
-            font-size: clamp(1.5rem, 5vw, 2rem);
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
+        .chess-piece:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .chess-piece:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .chess-piece:nth-child(3) { top: 60%; left: 8%; animation-delay: 2s; }
+        .chess-piece:nth-child(4) { top: 70%; right: 5%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(45deg, #d4af37, #f4e184, #d4af37);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            padding: 0 10px;
         }
 
-        .wheel-container {
-            position: relative;
-            margin: 20px auto;
-            width: min(90vw, 350px);
-            height: min(90vw, 350px);
-            max-width: 350px;
-            max-height: 350px;
-            transition: transform 0.3s ease;
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(212, 175, 55, 0.3);
         }
 
-        .wheel-container:hover {
-            transform: scale(1.02);
+        .author {
+            background: #d4af37;
+            color: #1a1a1a;
+            padding: 8px 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
         }
 
-        .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
-            background: white;
-        }
-
-        .section-text {
-            position: absolute;
-            color: white;
-            font-weight: 900;
-            font-size: clamp(10px, 2.5vw, 14px);
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: clamp(50px, 15vw, 80px);
-            height: clamp(50px, 15vw, 80px);
-            background: linear-gradient(135deg, #f0f0f0, #ffffff);
-            border-radius: 50%;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.8);
-            z-index: 10;
+        .hero-section {
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #ddd;
+            min-height: 80vh;
+            padding: 40px 20px;
+            position: relative;
         }
 
-        .logo-img {
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
-            border-radius: 50%;
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: center;
         }
 
-        .pointer {
+        .book-cover {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .book-image {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .book-image:hover {
+            transform: scale(1.05) rotateY(5deg);
+            box-shadow: 0 30px 60px rgba(212, 175, 55, 0.4);
+        }
+
+        .chess-board-bg {
             position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: clamp(12px, 3vw, 20px) solid transparent;
-            border-right: clamp(12px, 3vw, 20px) solid transparent;
-            border-top: clamp(18px, 4vw, 30px) solid #ffd700;
-            z-index: 15;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
-            animation: bounce 2s infinite;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: 
+                linear-gradient(45deg, transparent 25%, rgba(212, 175, 55, 0.1) 25%, rgba(212, 175, 55, 0.1) 50%, transparent 50%),
+                linear-gradient(-45deg, transparent 25%, rgba(212, 175, 55, 0.1) 25%, rgba(212, 175, 55, 0.1) 50%, transparent 50%);
+            background-size: 40px 40px;
+            opacity: 0.3;
+            border-radius: 20px;
+            z-index: -1;
         }
 
-        .controls {
-            margin: 20px 0;
-            padding: 0 10px;
+        .info-section {
+            text-align: left;
         }
 
-        .spin-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            border: none;
-            padding: clamp(12px, 3vw, 15px) clamp(25px, 6vw, 40px);
-            border-radius: 50px;
-            color: white;
-            font-size: clamp(14px, 3.5vw, 18px);
+        .tagline {
+            font-size: 1.8rem;
+            color: #d4af37;
             font-weight: bold;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+        }
+
+        .features {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid #d4af37;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateX(10px);
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            color: #d4af37;
+        }
+
+        .cta-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .price {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .old-price {
+            font-size: 1.2rem;
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .new-price {
+            font-size: 2rem;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .discount {
+            background: #ff4444;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .buy-button {
+            background: linear-gradient(45deg, #d4af37, #f4e184);
+            color: #1a1a1a;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
             text-transform: uppercase;
             letter-spacing: 1px;
             position: relative;
             overflow: hidden;
-            width: 100%;
-            max-width: 300px;
-            touch-action: manipulation;
         }
 
-        .spin-btn::before {
+        .buy-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .buy-button:before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: left 0.5s;
         }
 
-        .spin-btn:hover::before,
-        .spin-btn:active::before {
+        .buy-button:hover:before {
             left: 100%;
         }
 
-        .spin-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(255,107,107,0.6);
+        .guarantee {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #888;
         }
 
-        .spin-btn:active {
-            transform: translateY(0);
-        }
-
-        .spin-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .result {
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            min-height: 60px;
+        .interactive-chess {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #d4af37;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            transition: all 0.3s ease;
-            font-size: clamp(14px, 3vw, 16px);
-        }
-
-        .result:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
-        }
-
-        .result h3 {
-            color: #ffd700;
-            margin-bottom: 8px;
-            font-size: clamp(16px, 4vw, 20px);
-        }
-
-        .contact-btn {
-            background: linear-gradient(45deg, #0088cc, #0066aa);
-            border: none;
-            padding: clamp(10px, 2.5vw, 15px) clamp(20px, 5vw, 30px);
-            border-radius: 50px;
-            color: white;
-            font-size: clamp(13px, 3vw, 16px);
-            font-weight: bold;
             cursor: pointer;
+            font-size: 24px;
+            color: #1a1a1a;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0,136,204,0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-            touch-action: manipulation;
-        }
-
-        .contact-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(0,136,204,0.6);
-        }
-
-        .contact-info {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            font-size: clamp(12px, 2.8vw, 14px);
-            transition: all 0.3s ease;
-        }
-
-        .contact-info:hover {
-            background: rgba(0,0,0,0.4);
-        }
-
-        .contact-info h4 {
-            font-size: clamp(14px, 3.2vw, 16px);
-            margin-bottom: 5px;
-        }
-
-        /* Notifications responsive */
-        .notification {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            left: 10px;
-            max-width: calc(100vw - 20px);
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             z-index: 1000;
-            font-weight: bold;
-            font-size: clamp(12px, 3vw, 14px);
+        }
+
+        .interactive-chess:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #2d2d2d;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
             text-align: center;
-            word-wrap: break-word;
+            position: relative;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #d4af37;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
             }
-            40% {
-                transform: translateX(-50%) translateY(-8px);
+            
+            .header h1 {
+                font-size: 1.8rem;
             }
-            60% {
-                transform: translateX(-50%) translateY(-4px);
+            
+            .tagline {
+                font-size: 1.4rem;
             }
-        }
-
-        @keyframes glow {
-            0%, 100% { 
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            }
-            50% { 
-                box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+            
+            .info-section {
+                text-align: center;
             }
         }
 
-        .winning-section {
-            animation: glow 2s infinite;
+        .stats-section {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 60px 20px;
+            text-align: center;
+            margin: 80px 0;
         }
 
-        /* Media queries pour très petits écrans */
-        @media (max-width: 320px) {
-            .container {
-                padding: 0 5px;
-            }
-            
-            .wheel-container {
-                width: 280px;
-                height: 280px;
-            }
-            
-            h1 {
-                margin-bottom: 15px;
-            }
-            
-            .controls {
-                margin: 15px 0;
-            }
-            
-            .result {
-                padding: 12px;
-                margin: 12px 0;
-            }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        /* Media queries pour grands écrans */
-        @media (min-width: 768px) {
-            .notification {
-                right: 20px;
-                left: auto;
-                max-width: 350px;
-            }
+        .stat-item {
+            padding: 20px;
         }
 
-        /* Optimisations pour les écrans tactiles */
-        @media (hover: none) and (pointer: coarse) {
-            .spin-btn:hover {
-                transform: none;
-                box-shadow: 0 8px 25px rgba(255,107,107,0.4);
-            }
-            
-            .contact-btn:hover {
-                transform: none;
-                box-shadow: 0 8px 25px rgba(0,136,204,0.4);
-            }
-            
-            .wheel-container:hover {
-                transform: none;
-            }
-            
-            .result:hover {
-                transform: none;
-                background: rgba(255,255,255,0.1);
-            }
+        .stat-number {
+            font-size: 3rem;
+            color: #d4af37;
+            font-weight: bold;
+            display: block;
         }
 
-        /* Amélioration de la lisibilité sur petits écrans */
-        @media (max-height: 600px) {
-            body {
-                padding: 5px;
-            }
-            
-            h1 {
-                margin-bottom: 10px;
-            }
-            
-            .wheel-container {
-                margin: 10px auto;
-            }
-            
-            .controls {
-                margin: 10px 0;
-            }
-            
-            .contact-info {
-                margin-top: 10px;
-            }
+        .stat-label {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🍀 Le Juste Prix 🍀</h1>
-        
-        <div class="wheel-container">
-            <div class="pointer"></div>
-            <div class="wheel" id="wheel">
-                <!-- Les sections seront générées par JavaScript -->
+    <div class="chess-piece">♔</div>
+    <div class="chess-piece">♕</div>
+    <div class="chess-piece">♖</div>
+    <div class="chess-piece">♗</div>
+
+    <header class="header">
+        <div class="author">CONNOR HAMILTON</div>
+        <h1>SMART-COMMERCE GUIDE</h1>
+    </header>
+
+    <main class="hero-section">
+        <div class="content-wrapper">
+            <div class="book-cover">
+                <div class="chess-board-bg"></div>
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDQwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMWExYTFhIi8+CjxyZWN0IHk9IjAiIHdpZHRoPSI0MDAiIGhlaWdodD0iODAiIGZpbGw9IiNkNGFmMzciLz4KPHRleHQgeD0iMjAwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzFhMWExYSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q09OTk9SIEhBTUlMVE9OPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjE4MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2Q0YWYzNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U01BUlQtPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2Q0YWYzNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q09NTUVSQ0U8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMzAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZDRhZjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HVUlERTwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFEIFdJVEggUFVSUE9TRSwgTElGVCBPVEhFUlMsIEFORDwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MRUFWRSBBIExARUdBQ1kgVEhBVCBMQVNUUzwvdGV4dD4KPHN2ZyB4PSIxNzAiIHk9IjQyMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjgwIj4KPHA+dGggZD0iTTMwIDEwYzEwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDBzMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMGMwIDAgMTAgMTAgMTAgMjBzLTEwIDIwLTEwIDIwYzAgMTAgMTAgMTAgMTAgMTBzMTAgMCAxMC0xMCIgZmlsbD0iI2Q0YWYzNyIvPgo8L3N2Zz4KPC9zdmc+" alt="Smart-Commerce Guide" class="book-image">
             </div>
-            <div class="wheel-center">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIGZpbGw9IiNmMGYwZjAiIHN0cm9rZT0iI2RkZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTUwIDEwQzc yLjA5MTQgMTAgOTAgMjcuOTA4NiA5MCA1MEM5MCA3Mi4wOTE0IDcyLjA5MTQgOTAgNTAgOTBDMjcuOTA4NiA5MCAxMCA3Mi4wOTE0IDEwIDUwQzEwIDI3LjkwODYgMjcuOTA4NiAxMCA1MCAxMCIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0IiBmaWxsPSIjMzMzIi8+PGNpcmNsZSBjeD0iNjAiIGN5PSI0MCIgcj0iNCIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik00MCA2NVE1MCA3MCA2MCA2NSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz48L3N2Zz4="">
+
+            <div class="info-section">
+                <h2 class="tagline">Dominez le commerce digital comme un maître d'échecs</h2>
+                
+                <p class="description">
+                    Apprenez les stratégies gagnantes pour transformer votre commerce traditionnel en empire digital. Chaque mouvement compte, chaque décision façonne votre succès.
+                </p>
+
+                <div class="features">
+                    <div class="feature">
+                        <span class="feature-icon">♔</span>
+                        <div>
+                            <strong>Stratégies de leadership</strong><br>
+                            Menez votre équipe vers le succès digital
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">♕</span>
+                        <div>
+                            <strong>Transformation digitale</strong><br>
+                            Méthodologies éprouvées pour réussir votre transition
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">♖</span>
+                        <div>
+                            <strong>ROI optimisé</strong><br>
+                            Maximisez vos investissements technologiques
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">♗</span>
+                        <div>
+                            <strong>Vision long terme</strong><br>
+                            Construisez un héritage durable et profitable
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <div class="price">
+                        <span class="old-price">49€</span>
+                        <span class="new-price">29€</span>
+                        <span class="discount">-40%</span>
+                    </div>
+                    
+                    <button class="buy-button" onclick="showModal()">
+                        Télécharger maintenant
+                    </button>
+                    
+                    <p class="guarantee">
+                        ✓ Satisfaction garantie 30 jours<br>
+                        ✓ Accès immédiat après achat<br>
+                        ✓ Format PDF optimisé mobile
+                    </p>
+                </div>
             </div>
         </div>
+    </main>
 
-        <div class="controls">
-            <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
-                 JE TENTE MA CHANCE 
-            </button>
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number" data-target="2500">0</span>
+                <div class="stat-label">Entrepreneurs formés</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="89">0</span>
+                <div class="stat-label">% de réussite</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="156">0</span>
+                <div class="stat-label">Pages de contenu</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="24">0</span>
+                <div class="stat-label">Études de cas</div>
+            </div>
         </div>
+    </section>
 
-        <div class="result" id="result">
-            <p>✨ Cliquez sur le bouton pour tentez votre chance de remportez un lot ! ✨</p>
+    <div class="interactive-chess" onclick="showChessModal()">
+        ♔
+    </div>
+
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 style="color: #d4af37; margin-bottom: 20px;">Échec et Mat !</h2>
+            <p style="margin-bottom: 20px;">Vous êtes sur le point de faire le mouvement gagnant pour votre entreprise.</p>
+            <p style="margin-bottom: 30px; color: #888;">Votre téléchargement commencera automatiquement...</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button style="padding: 10px 20px; background: #d4af37; color: #1a1a1a; border: none; border-radius: 5px; cursor: pointer;" onclick="simulateDownload()">Confirmer l'achat</button>
+                <button style="padding: 10px 20px; background: transparent; color: white; border: 1px solid #666; border-radius: 5px; cursor: pointer;" onclick="closeModal()">Annuler</button>
+            </div>
         </div>
+    </div>
 
-        <div class="contact-info">
-            <h4>Et si je gagne ?</h4>
-            <p>📞 Munissez-vous du screen et contactez le support du canal 📞 </p>
+    <div id="chessModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeChessModal()">&times;</span>
+            <h2 style="color: #d4af37; margin-bottom: 20px;">La Stratégie du Succès</h2>
+            <p style="margin-bottom: 20px;">"Dans les échecs comme dans les affaires, la victoire appartient à celui qui pense plusieurs coups à l'avance."</p>
+            <p style="color: #888;">- Connor Hamilton</p>
         </div>
     </div>
 
     <script>
-        let prizes = [
-            "PERDU",    // Index 0 - Gagnant
-            "PERDU",        // Index 1
-            "  1G OFFERT",        // Index 2
-            "PERDU",        // Index 3
-            "PERDU",        // Index 4
-            " JACKPOT",        // Index 5
-            "PERDU",          // Index 6 - Gagnant
-            "PERDU",        // Index 7
-            "  PROMO ",        // Index 8
-            "PERDU",        // Index 9
-            "PERDU",    // Index 10 - Gagnant
-            "  CIGARETTE"         // Index 11
-        ];
-
-        let winningIndexes = [2, 5, 8, 11]; // Seulement 3 cases gagnantes
-        let losingIndexes = [0, 1, 3, 4, 6, 7, 9, 10]; // 9 cases perdantes
-        let isSpinning = false;
-       let hasPlayed = localStorage.getItem('hasPlayed') === 'true';
-
-
-        // Couleurs : gris pour PERDU, couleurs vives pour les gagnantes
-        const colors = [
-            '#757575',      // Rouge vif pour "1G OFFERT"
-            '#757575',      // Gris pour "PERDU"
-            '#6E6CE5',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#d5c340',      // Gris pour "PERDU"
-            '#757575',      // Vert vif pour "50€"
-            '#757575',      // Gris pour "PERDU"
-            '#6E6CE5',      // Gris pour "PERDU"
-            '#757575',      // Gris pour "PERDU"
-            '#757575',      // Orange vif pour "CIGARETTE"
-            '#6E6CE5'       // Gris pour "PERDU"
-        ];
-
-        function getWheelSize() {
-            const container = document.querySelector('.wheel-container');
-            return container.offsetWidth;
-        }
-
-        function createWheel() {
-            const wheel = document.getElementById('wheel');
-            const sectionAngle = 360 / prizes.length;
-            const wheelSize = getWheelSize();
-            const centerX = wheelSize / 2;
-            const centerY = wheelSize / 2;
-            const radius = (wheelSize / 2) - 5;
-            const textRadius = wheelSize * 0.25; // Responsive text radius
-            
-            wheel.innerHTML = '';
-            
-            prizes.forEach((prize, index) => {
-                // Créer une section SVG pour une vraie part de gâteau
-                const section = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                section.style.position = 'absolute';
-                section.style.top = '0';
-                section.style.left = '0';
-                section.style.width = '100%';
-                section.style.height = '100%';
-                section.style.pointerEvents = 'none';
+        // Animation des statistiques
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 100;
                 
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                
-                // Calculer les coordonnées pour une vraie part de gâteau
-                const startAngle = (index * sectionAngle - 90) * Math.PI / 180;
-                const endAngle = ((index + 1) * sectionAngle - 90) * Math.PI / 180;
-                
-                const x1 = centerX + radius * Math.cos(startAngle);
-                const y1 = centerY + radius * Math.sin(startAngle);
-                const x2 = centerX + radius * Math.cos(endAngle);
-                const y2 = centerY + radius * Math.sin(endAngle);
-                
-                const largeArcFlag = sectionAngle > 180 ? 1 : 0;
-                
-                const pathData = [
-                    `M ${centerX} ${centerY}`,
-                    `L ${x1} ${y1}`,
-                    `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-                    'Z'
-                ].join(' ');
-                
-                path.setAttribute('d', pathData);
-                path.setAttribute('fill', colors[index]);
-                path.setAttribute('stroke', '#ffffff');
-                path.setAttribute('stroke-width', '3');
-                
-                // Ajouter un effet spécial pour les cases gagnantes
-                if (winningIndexes.includes(index)) {
-                    path.setAttribute('filter', 'drop-shadow(0 0 8px rgba(255,255,255,0.8))');
-                }
-                
-                section.appendChild(path);
-                wheel.appendChild(section);
-                
-                // Ajouter le texte
-                const textDiv = document.createElement('div');
-                textDiv.className = 'section-text';
-                textDiv.textContent = prize;
-                
-                // Calculer la position pour aligner le texte
-                const textAngle = startAngle + (endAngle - startAngle) / 2;
-                const textX = centerX + textRadius * Math.cos(textAngle);
-                const textY = centerY + textRadius * Math.sin(textAngle);
-                
-                textDiv.style.position = 'absolute';
-                textDiv.style.left = textX + 'px';
-                textDiv.style.top = textY + 'px';
-                textDiv.style.transform = `translate(-50%, -50%) rotate(${(textAngle * 180 / Math.PI)}deg)`;
-                textDiv.style.transformOrigin = 'center';
-                
-                // Style spécial pour les gagnants
-                if (winningIndexes.includes(index)) {
-                    textDiv.style.fontSize = `clamp(12px, ${wheelSize * 0.04}px, 16px)`;
-                    textDiv.style.fontWeight = '900';
-                }
-                
-                wheel.appendChild(textDiv);
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 20);
             });
         }
 
-        function spinWheel() {
-            if (isSpinning || hasPlayed) return;
-            
-            isSpinning = true;
-            hasPlayed = true;
-localStorage.setItem('hasPlayed', 'true');
+        // Observer pour déclencher l'animation des stats
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
 
-            const spinBtn = document.getElementById('spinBtn');
-            const wheel = document.getElementById('wheel');
-            const result = document.getElementById('result');
-            
-            spinBtn.disabled = true;
-            spinBtn.textContent = ' ROTATION... ';
-            
-            // FORCER LA ROUE À TOUJOURS TOMBER SUR "PERDU"
-            const losingIndex = losingIndexes[Math.floor(Math.random() * losingIndexes.length)];
-            const sectionAngle = 360 / prizes.length;
-            
-            // Calculer l'angle exact pour tomber sur la case perdante choisie
-            const targetAngle = (losingIndex * sectionAngle) + (sectionAngle / 2);
-            const randomSpins = 4 + Math.floor(Math.random() * 3); // 4 à 6 tours complets
-            const finalRotation = (randomSpins * 360) + (360 - targetAngle);
-            
-            wheel.style.transform = `rotate(${finalRotation}deg)`;
-            
-            setTimeout(() => {
-                const winningPrize = prizes[losingIndex];
-                
-                // Toujours afficher le résultat "PERDU"
-                result.innerHTML = `
-                    <div>
-                        <h3>❌ Dommage !</h3>
-                        <p style="font-size: clamp(16px, 4vw, 18px); margin: 8px 0; color: #ff6b6b;"><strong>${winningPrize}</strong></p>
-                        <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.9; margin-bottom: 12px;">Vous n'avez pas gagné cette fois, peut être une prochaine fois !</p>
-                        <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
-                            💬 Contacter le Support
-                        </a>
-                    </div>
-                `;
-                
-                // Animation de "presque gagné" pour créer de la frustration
-                showAlmostWonNotification();
-                
-                isSpinning = false;
-                spinBtn.disabled = true;
-                spinBtn.textContent = '❌ PARTIE TERMINÉE';
-                spinBtn.style.opacity = '0.6';
-            }, 4000);
+        observer.observe(document.querySelector('.stats-section'));
+
+        // Fonctions modales
+        function showModal() {
+            document.getElementById('purchaseModal').style.display = 'flex';
         }
 
-        function showAlmostWonNotification() {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.background = 'linear-gradient(45deg, #ff6b6b, #ee5a24)';
-            notification.style.border = '2px solid #fff';
-            notification.style.animation = 'slideIn 0.3s ease-out';
-            notification.innerHTML = '⚠️ Si proche de gagner ! Restez actif sur le canal pour plus de mini-jeu quotidien !';
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-in forwards';
-                setTimeout(() => notification.remove(), 300);
-            }, 5000);
+        function closeModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
         }
 
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.background = 'linear-gradient(45deg, #00d2ff, #3a7bd5)';
-            notification.style.animation = 'slideIn 0.3s ease-out';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-in forwards';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
+        function showChessModal() {
+            document.getElementById('chessModal').style.display = 'flex';
         }
 
-        // Auto-démarrage pour les nouveaux utilisateurs
-        function autoShowForNewUser() {
-            setTimeout(() => {
-                showNotification('🎊 Vous Possèdez actuellement 1 TOUR GRATUIT !');
-            }, 1000);
-            
-            // Créer un effet de "presque gagné" visuel
-            setTimeout(() => {
-                const wheel = document.querySelector('.wheel-container');
-                wheel.style.animation = 'pulse 0.8s ease-in-out 2';
-                setTimeout(() => {
-                    wheel.style.animation = '';
-                }, 1600);
-            }, 2000);
+        function closeChessModal() {
+            document.getElementById('chessModal').style.display = 'none';
         }
 
-        // Recalculer la roue lors du redimensionnement
-        function handleResize() {
-            createWheel();
+        function simulateDownload() {
+            alert('Merci pour votre achat ! Votre ebook sera disponible dans quelques instants.');
+            closeModal();
         }
 
-        // Initialisation
-        createWheel();
+        // Fermeture modale en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const purchaseModal = document.getElementById('purchaseModal');
+            const chessModal = document.getElementById('chessModal');
+            if (event.target === purchaseModal) {
+                closeModal();
+            }
+            if (event.target === chessModal) {
+                closeChessModal();
+            }
+        }
 
-        // Écouteurs d'événements
-       window.addEventListener('load', () => {
-    showNotification('🎰 Veuillez patientez... !');
-    autoShowForNewUser();
-
-    // ✅ Blocage si l'utilisateur a déjà joué
-    if (localStorage.getItem('hasPlayed') === 'true') {
-        const spinBtn = document.getElementById('spinBtn');
-        const result = document.getElementById('result');
-        spinBtn.disabled = true;
-        spinBtn.textContent = '❌ DÉJÀ JOUÉ';
-        spinBtn.style.opacity = '0.6';
-        result.innerHTML = `
-         <style>
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.animated-text {
-  font-size: clamp(14px, 3vw, 16px);
-  font-weight: bold;
-  font-style: italic;
-  margin: 8px 0;
-  animation: pulse 1.5s infinite;
-  display: inline-block;
-}
-</style>
-
-<div>
-  <h3>🔒 Accès limité</h3>
-  <p style="font-size: clamp(14px, 3vw, 16px); margin: 8px 0;">Vous avez déjà utilisé votre tour.</p>
-  <p class="animated-text">🎁 PARRAINE UN AMI = 2 TOUR EN +</p>
-  <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
-    💬 Contacter le Support
-  </a>
-</div>
-
-
-        `;
-    }
-});
-
-window.addEventListener('resize', handleResize);
-window.addEventListener('orientationchange', () => {
-    setTimeout(handleResize, 100);
-});
-
+        // Animation de parallaxe légère
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const chessElements = document.querySelectorAll('.chess-piece');
+            chessElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+            });
+        });
     </script>
 </body>
 </html>

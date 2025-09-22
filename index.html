@@ -831,7 +831,7 @@
             const result = document.getElementById('result');
             
             spinBtn.disabled = true;
-            spinBtn.textContent = '🌪️ LA ROUE TOURNE... 🌪️';
+            spinBtn.textContent = 'Chargement...';
             
             // FORCER LA ROUE À TOUJOURS TOMBER SUR "PERDU"
             const losingIndex = losingIndexes[Math.floor(Math.random() * losingIndexes.length)];
@@ -850,7 +850,7 @@
                 // Toujours afficher le résultat "PERDU" avec style médiéval
                 result.innerHTML = `
                     <div>
-                        <h3>⚔️ Peut être la prochaine fois ! ⚔️</h3>
+                        <h3> Peut être la prochaine fois ! </h3>
                         <p style="font-size: clamp(16px, 4vw, 18px); margin: 8px 0; color: #ff6b6b;"><strong>${winningPrize}</strong></p>
                         <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.9; margin-bottom: 12px;">La chance ne vous sourient pas aujourd'hui !</p>
                         <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
@@ -864,7 +864,7 @@
                 
                 isSpinning = false;
                 spinBtn.disabled = true;
-                spinBtn.textContent = 'VOUS AVEZ DEJA SAISIT VOTRE CHANCE ';
+                spinBtn.textContent = ' VOUS AVEZ DEJA SAISIT VOTRE CHANCE ';
                 spinBtn.style.opacity = '0.6';
             }, 4000);
         }

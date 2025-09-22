@@ -25,36 +25,7 @@
             background-attachment: fixed;
         }
 
-        /* Effets de flammes et fumée */
-        .flame-effects {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .flame {
-            position: absolute;
-            width: 6px;
-            height: 20px;
-            background: linear-gradient(to top, #ff4500, #ffd700, #ff8c00);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: flicker 2s infinite alternate;
-            filter: blur(0.5px);
-        }
-
-        @keyframes flicker {
-            0% { transform: scale(1) rotate(-2deg); opacity: 0.8; }
-            25% { transform: scale(1.1) rotate(2deg); opacity: 1; }
-            50% { transform: scale(0.9) rotate(-1deg); opacity: 0.9; }
-            75% { transform: scale(1.05) rotate(1deg); opacity: 1; }
-            100% { transform: scale(1) rotate(-2deg); opacity: 0.8; }
-        }
-
-        /* Particules mystiques */
+        /* Effets mystiques */
         .mystic-particles {
             position: fixed;
             top: 0;
@@ -97,6 +68,24 @@
             }
         }
 
+        .flame {
+            position: absolute;
+            width: 6px;
+            height: 20px;
+            background: linear-gradient(to top, #ff4500, #ffd700, #ff8c00);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 2s infinite alternate;
+            filter: blur(0.5px);
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-2deg); opacity: 0.8; }
+            25% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+            50% { transform: scale(0.9) rotate(-1deg); opacity: 0.9; }
+            75% { transform: scale(1.05) rotate(1deg); opacity: 1; }
+            100% { transform: scale(1) rotate(-2deg); opacity: 0.8; }
+        }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -123,7 +112,7 @@
                 12px 12px 20px rgba(0,0,0,0.8),
                 0 0 30px #ffd700,
                 0 0 60px #ffd700;
-            margin: 20px 0 50px;
+            margin: 20px 0 30px;
             letter-spacing: 3px;
             transform: perspective(500px) rotateX(15deg);
             position: relative;
@@ -153,40 +142,8 @@
             box-shadow: 0 0 20px #ffd700;
         }
 
-        .game-section {
-            background: 
-                radial-gradient(ellipse at center, rgba(139, 69, 19, 0.4) 0%, rgba(92, 51, 23, 0.6) 100%);
-            border: 5px solid #8b4513;
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 
-                inset 0 0 50px rgba(255, 215, 0, 0.1),
-                0 0 50px rgba(0, 0, 0, 0.8),
-                0 0 100px rgba(139, 69, 19, 0.3);
-            backdrop-filter: blur(15px);
-            position: relative;
-        }
-
-        .game-section::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(45deg, #ffd700, #8b4513, #ffd700, #8b4513);
-            border-radius: 33px;
-            z-index: -1;
-            animation: borderGlow 3s infinite alternate;
-        }
-
-        @keyframes borderGlow {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
         .user-form {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             text-align: center;
         }
 
@@ -224,7 +181,7 @@
             font-style: italic;
         }
 
-        /* VRAIE ROUE DE LA FORTUNE */
+        /* ROUE DE LA FORTUNE OPTIMISÉE */
         .wheel-container {
             position: relative;
             width: 400px;
@@ -245,68 +202,69 @@
                 0 0 50px rgba(255, 215, 0, 0.4),
                 inset 0 0 30px rgba(0,0,0,0.3);
             overflow: hidden;
+            background: #2c1810;
         }
 
         .wheel-segment {
             position: absolute;
-            width: 50%;
-            height: 50%;
-            transform-origin: right bottom;
+            width: 200px;
+            height: 200px;
+            top: 0;
+            left: 50%;
+            transform-origin: 0 200px;
+            clip-path: polygon(0 0, 31% 0, 50% 100%);
             display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding-left: 30px;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 40px;
             font-weight: 700;
-            font-size: 14px;
-            text-align: left;
+            font-size: 11px;
+            text-align: center;
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
-            line-height: 1.2;
+            line-height: 1.1;
             font-family: 'MedievalSharp', cursive;
-            letter-spacing: 0.5px;
+            border-right: 2px solid rgba(255,255,255,0.2);
         }
 
-        .wheel-segment::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: inherit;
-            opacity: 0.1;
-            background-image: 
-                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 50%),
-                linear-gradient(45deg, transparent 30%, rgba(255,215,0,0.1) 50%, transparent 70%);
+        .wheel-segment span {
+            transform: rotate(-90deg);
+            white-space: nowrap;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .wheel-pointer {
             position: absolute;
-            top: -20px;
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 40px solid #ffd700;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 50px solid #ffd700;
             z-index: 10;
             box-shadow: 
-                0 0 20px rgba(255, 215, 0, 0.8),
-                0 5px 15px rgba(0,0,0,0.5);
-            filter: drop-shadow(0 0 10px #ffd700);
+                0 0 25px rgba(255, 215, 0, 0.8),
+                0 8px 20px rgba(0,0,0,0.5);
+            filter: drop-shadow(0 0 15px #ffd700);
         }
 
         .wheel-pointer::after {
             content: '';
             position: absolute;
-            top: -35px;
-            left: -15px;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle, #ffd700, #b8860b);
+            top: -40px;
+            left: -20px;
+            width: 40px;
+            height: 40px;
+            background: 
+                radial-gradient(circle, #ffd700 0%, #daa520 50%, #b8860b 100%);
             border-radius: 50%;
-            border: 3px solid #8b4513;
+            border: 4px solid #654321;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
         }
 
         .wheel-center {
@@ -333,7 +291,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
+            font-size: 28px;
             color: #654321;
             text-shadow: 1px 1px 2px rgba(255,215,0,0.5);
         }
@@ -361,29 +319,6 @@
             overflow: hidden;
         }
 
-        .spin-button::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s;
-            opacity: 0;
-        }
-
-        .spin-button:hover:not(:disabled)::before {
-            animation: shine 0.6s;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
-        }
-
         .spin-button:hover:not(:disabled) {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 
@@ -399,7 +334,81 @@
             border-color: #333;
         }
 
-        /* POPUP DE RÉSULTAT ÉPIQUE */
+        /* POPUP DE BIENVENUE */
+        .welcome-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome-content {
+            background: 
+                radial-gradient(ellipse at center, rgba(139, 69, 19, 0.95) 0%, rgba(42, 24, 16, 0.98) 100%);
+            border: 6px solid #ffd700;
+            border-radius: 30px;
+            padding: 50px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 
+                0 0 100px rgba(255, 215, 0, 0.3),
+                inset 0 0 50px rgba(255, 215, 0, 0.1);
+            animation: welcomeGlow 2s infinite alternate;
+        }
+
+        @keyframes welcomeGlow {
+            0% { box-shadow: 0 0 100px rgba(255, 215, 0, 0.3), inset 0 0 50px rgba(255, 215, 0, 0.1); }
+            100% { box-shadow: 0 0 150px rgba(255, 215, 0, 0.5), inset 0 0 80px rgba(255, 215, 0, 0.2); }
+        }
+
+        .welcome-content h2 {
+            color: #ffd700;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 20px;
+            font-family: 'Cinzel Decorative', serif;
+            font-weight: 900;
+            text-shadow: 
+                2px 2px 0px #8b4513,
+                4px 4px 0px #654321,
+                6px 6px 15px rgba(0,0,0,0.8);
+        }
+
+        .welcome-content p {
+            color: #f0e68c;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            font-family: 'MedievalSharp', cursive;
+        }
+
+        .welcome-button {
+            background: linear-gradient(145deg, #ffd700, #b8860b);
+            border: 3px solid #654321;
+            color: #2c1810;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Cinzel Decorative', serif;
+            padding: 15px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .welcome-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.4);
+        }
+
+        /* POPUP DE RÉSULTAT */
         .result-popup {
             position: fixed;
             top: 50%;
@@ -420,25 +429,6 @@
             backdrop-filter: blur(20px);
             max-width: 90vw;
             max-height: 90vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .result-popup::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
-            animation: resultGlow 2s infinite alternate;
-        }
-
-        @keyframes resultGlow {
-            0% { transform: scale(0.8) rotate(0deg); opacity: 0.3; }
-            100% { transform: scale(1.2) rotate(180deg); opacity: 0.7; }
         }
 
         .result-popup.show {
@@ -475,9 +465,6 @@
                 3px 3px 0px #8b4513,
                 6px 6px 0px #654321,
                 9px 9px 20px rgba(0,0,0,0.8);
-            letter-spacing: 2px;
-            position: relative;
-            z-index: 2;
         }
 
         .result-popup .prize-display {
@@ -486,8 +473,6 @@
             font-family: 'MedievalSharp', cursive;
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            position: relative;
-            z-index: 2;
         }
 
         .result-popup .prize-display.win {
@@ -523,8 +508,6 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: relative;
-            z-index: 2;
             margin-top: 20px;
         }
 
@@ -533,28 +516,10 @@
             box-shadow: 0 8px 25px rgba(255,215,0,0.4);
         }
 
-        /* Effets de feu sur les côtés */
-        .side-flames {
-            position: fixed;
-            top: 0;
-            height: 100vh;
-            width: 50px;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .side-flames.left { left: 0; }
-        .side-flames.right { right: 0; }
-
         @media (max-width: 600px) {
             .wheel-container {
                 width: 300px;
                 height: 300px;
-            }
-            
-            .game-section {
-                padding: 20px;
-                margin: 10px;
             }
             
             .user-form input {
@@ -562,38 +527,45 @@
                 font-size: 16px;
                 padding: 15px 20px;
             }
+            
+            .welcome-content {
+                padding: 30px 20px;
+                margin: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Effets mystiques -->
     <div class="mystic-particles" id="mysticParticles"></div>
-    <div class="flame-effects" id="flameEffects"></div>
-    
-    <!-- Flammes sur les côtés -->
-    <div class="side-flames left" id="leftFlames"></div>
-    <div class="side-flames right" id="rightFlames"></div>
+
+    <!-- Popup de bienvenue -->
+    <div class="welcome-popup" id="welcomePopup">
+        <div class="welcome-content">
+            <h2>🏰 BIENVENUE</h2>
+            <p>Bienvenue dans la Roue de la Taverne de Limoge !</p>
+            <p><strong>⚠️ Vous n'avez qu'une seule chance !</strong></p>
+            <p>Tentez votre destin et découvrez ce que le sort vous réserve...</p>
+            <button class="welcome-button" onclick="closeWelcome()">Commencer l'Aventure</button>
+        </div>
+    </div>
 
     <div class="container">
         <h1 class="title">TAVERNE DE LIMOGE</h1>
         
-        <div class="game-section">
-            <div class="user-form">
-                <input type="text" id="telegramUsername" placeholder="🏰 Votre nom d'utilisateur Telegram" maxlength="50">
-            </div>
-            
-            <div class="wheel-container">
-                <div class="wheel-pointer"></div>
-                <div class="wheel" id="wheel">
-                    <!-- Segments générés par JavaScript -->
-                </div>
-                <div class="wheel-center"></div>
-            </div>
-            
-            <button class="spin-button" id="spinButton" disabled>
-                Entrez votre nom d'utilisateur
-            </button>
+        <div class="user-form">
+            <input type="text" id="telegramUsername" placeholder="🏰 Votre nom d'utilisateur Telegram" maxlength="50">
         </div>
+        
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <div class="wheel" id="wheel"></div>
+            <div class="wheel-center"></div>
+        </div>
+        
+        <button class="spin-button" id="spinButton" disabled>
+            Entrez votre nom d'utilisateur
+        </button>
     </div>
 
     <!-- Popup de résultat -->
@@ -606,16 +578,18 @@
     <script>
         // Configuration avec gains et échecs
         const wheelOptions = [
-            { type: 'win', text: '💎 Diamant Mystique', color: '#4169E1' },
-            { type: 'lose', text: '💀 Malédiction', color: '#8B0000' },
-            { type: 'win', text: '🏺 Amphore d\'Or', color: '#FF8C00' },
-            { type: 'lose', text: '🕷️ Toile d\'Araignée', color: '#2F2F2F' },
-            { type: 'win', text: '⚔️ Épée Légendaire', color: '#C0C0C0' },
-            { type: 'lose', text: '💨 Vent Vide', color: '#696969' },
-            { type: 'win', text: '👑 Couronne Royale', color: '#FFD700' },
+            { type: 'win', text: '💎 Diamant', color: '#4169E1' },
+            { type: 'lose', text: '💀 Mort', color: '#8B0000' },
+            { type: 'win', text: '🏺 Or', color: '#FF8C00' },
+            { type: 'lose', text: '🕷️ Araignée', color: '#2F2F2F' },
+            { type: 'win', text: '⚔️ Épée', color: '#C0C0C0' },
+            { type: 'lose', text: '💨 Vide', color: '#696969' },
+            { type: 'win', text: '👑 Couronne', color: '#FFD700' },
             { type: 'lose', text: '🦇 Chauve-souris', color: '#4A4A4A' },
-            { type: 'win', text: '🔮 Orbe Magique', color: '#9932CC' },
-            { type: 'lose', text: '☠️ Crâne Maudit', color: '#8B0000' }
+            { type: 'win', text: '🔮 Orbe', color: '#9932CC' },
+            { type: 'lose', text: '☠️ Crâne', color: '#8B0000' },
+            { type: 'win', text: '💰 Trésor', color: '#DAA520' },
+            { type: 'lose', text: '🐍 Serpent', color: '#006400' }
         ];
 
         let gameData = JSON.parse(localStorage.getItem('taverneGame')) || {
@@ -636,8 +610,13 @@
                 const username = this.value.trim();
                 if (username) {
                     const remainingSpins = getRemainingSpins(username);
-                    spinButton.disabled = false;
-                    spinButton.textContent = `🎲 Tourner la Roue (${remainingSpins} tour${remainingSpins > 1 ? 's' : ''})`;
+                    if (remainingSpins > 0) {
+                        spinButton.disabled = false;
+                        spinButton.textContent = '🎲 TOURNER LA ROUE';
+                    } else {
+                        spinButton.disabled = true;
+                        spinButton.textContent = '❌ DÉJÀ UTILISÉ';
+                    }
                 } else {
                     spinButton.disabled = true;
                     spinButton.textContent = "Entrez votre nom d'utilisateur";
@@ -645,7 +624,7 @@
             });
         });
 
-        // Création de la roue circulaire
+        // Création de la roue optimisée
         function createWheel() {
             const wheel = document.getElementById('wheel');
             const segmentAngle = 360 / wheelOptions.length;
@@ -653,23 +632,36 @@
             wheelOptions.forEach((option, index) => {
                 const segment = document.createElement('div');
                 segment.className = 'wheel-segment';
-                segment.style.background = option.color;
-                segment.style.transform = `rotate(${index * segmentAngle}deg) skewY(${90 - segmentAngle}deg)`;
-                segment.style.transformOrigin = 'right bottom';
-                segment.textContent = option.text;
+                segment.style.background = `linear-gradient(135deg, ${option.color}, ${adjustBrightness(option.color, -30)})`;
+                segment.style.transform = `rotate(${index * segmentAngle}deg)`;
+                
+                const textSpan = document.createElement('span');
+                textSpan.textContent = option.text;
+                segment.appendChild(textSpan);
+                
                 wheel.appendChild(segment);
             });
+        }
+
+        // Fonction pour ajuster la luminosité des couleurs
+        function adjustBrightness(color, amount) {
+            const usePound = color[0] === '#';
+            const col = usePound ? color.slice(1) : color;
+            const num = parseInt(col, 16);
+            let r = (num >> 16) + amount;
+            let b = ((num >> 8) & 0x00FF) + amount;
+            let g = (num & 0x0000FF) + amount;
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
         }
 
         // Effets mystiques
         function createMysticalEffects() {
             const mysticContainer = document.getElementById('mysticParticles');
-            const flameContainer = document.getElementById('flameEffects');
-            const leftFlames = document.getElementById('leftFlames');
-            const rightFlames = document.getElementById('rightFlames');
             
-            // Particules mystiques
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 40; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'mystic-particle';
                 particle.style.left = Math.random() * 100 + '%';
@@ -679,27 +671,15 @@
             }
 
             // Flammes aléatoires
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const flame = document.createElement('div');
                 flame.className = 'flame';
                 flame.style.left = Math.random() * 100 + '%';
                 flame.style.top = Math.random() * 100 + '%';
                 flame.style.animationDelay = Math.random() * 2 + 's';
                 flame.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-                flameContainer.appendChild(flame);
+                mysticContainer.appendChild(flame);
             }
-
-            // Flammes sur les côtés
-            [leftFlames, rightFlames].forEach(container => {
-                for (let i = 0; i < 10; i++) {
-                    const flame = document.createElement('div');
-                    flame.className = 'flame';
-                    flame.style.left = Math.random() * 50 + 'px';
-                    flame.style.top = (i * 10 + Math.random() * 5) + '%';
-                    flame.style.animationDelay = Math.random() * 2 + 's';
-                    container.appendChild(flame);
-                }
-            });
         }
 
         function getRemainingSpins(username) {
@@ -709,54 +689,45 @@
             return gameData.users[username].spins;
         }
 
+        function closeWelcome() {
+            document.getElementById('welcomePopup').style.display = 'none';
+        }
+
         function spinWheel() {
             const username = document.getElementById('telegramUsername').value.trim();
             if (!username || isSpinning) return;
             
             const remainingSpins = getRemainingSpins(username);
             if (remainingSpins <= 0) {
-                alert('🚫 Vous n\'avez plus de tours disponibles !');
+                alert('🚫 Vous avez déjà utilisé votre chance !');
                 return;
             }
             
             isSpinning = true;
             const spinButton = document.getElementById('spinButton');
             spinButton.disabled = true;
-            spinButton.textContent = '🌪️ La roue tourne...';
+            spinButton.textContent = '🌪️ LA ROUE TOURNE...';
             
             const wheel = document.getElementById('wheel');
             const segmentAngle = 360 / wheelOptions.length;
             const winningIndex = Math.floor(Math.random() * wheelOptions.length);
             const winningOption = wheelOptions[winningIndex];
             
-            // Calcul rotation avec plusieurs tours
+            // Calcul rotation avec plusieurs tours pour un effet réaliste
             const spins = 5 + Math.random() * 5;
-            const finalAngle = spins * 360 + (360 - winningIndex * segmentAngle - segmentAngle/2);
+            const finalAngle = spins * 360 + (winningIndex * segmentAngle) + (segmentAngle / 2);
             
             wheel.style.transform = `rotate(${finalAngle}deg)`;
             
             setTimeout(() => {
-                // Mise à jour données
-                gameData.users[username].spins--;
+                // Mise à jour données utilisateur
+                gameData.users[username].spins = 0;
+                gameData.users[username].lastResult = winningOption;
                 localStorage.setItem('taverneGame', JSON.stringify(gameData));
                 
                 // Affichage résultat
                 showResult(winningOption, username);
                 
                 // Reset bouton
-                const newSpins = gameData.users[username].spins;
                 isSpinning = false;
-                
-                if (newSpins > 0) {
-                    spinButton.disabled = false;
-                    spinButton.textContent = `🎲 Tourner la Roue (${newSpins} tour${newSpins > 1 ? 's' : ''})`;
-                } else {
-                    spinButton.textContent = '❌ Plus de tours disponibles';
-                }
-                
-            }, 4000);
-        }
-
-        function showResult(option, username) {
-            const popup = document.getElementById('resultPopup');
-            const title = document.getElementById('resultTitle');
+                spinButton.textContent = '❌ CHANCE UTILISÉE';

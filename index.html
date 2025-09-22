@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le juste Prix</title>
+    <title>La Taverne de Limoges </title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&family=Uncial+Antiqua&display=swap');
 
@@ -641,7 +641,7 @@
     <div class="mystic-particles" id="mysticParticles"></div>
 
     <div class="container">
-        <h1>⚔️ LE JUSTE PRIX ⚔️</h1>
+        <h1>La Taverne de Limoges </h1>
         
         <div class="wheel-container">
             <div class="pointer"></div>
@@ -655,17 +655,17 @@
 
         <div class="controls">
             <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
-                🎰 JE TENTE MA CHANCE 🎰
+                 JE TENTE MA CHANCE 
             </button>
         </div>
 
         <div class="result" id="result">
-            <p>✨ Tournez la roue et découvrez si la fortune vous sourit ! ✨</p>
+            <p>✨ Tournez la roue et découvrez si la chance vous sourit ! ✨</p>
         </div>
 
         <div class="contact-info">
             <h4>🏆 Et si je gagne ?</h4>
-            <p>📜 Capturez votre victoire et contactez nos maîtres du trésor ! 📜</p>
+            <p>📜 Capturez votre victoire et contactez le support ! 📜</p>
         </div>
     </div>
 
@@ -697,13 +697,13 @@
 
         // Votre logique originale conservée intégralement
         let prizes = [
-            "1G OFFERT",    // Index 0 - Gagnant
+            "5G OFFERT",    // Index 0 - Gagnant
             "PERDU",        // Index 1
             "PERDU",        // Index 2
             "PERDU",        // Index 3
             "PERDU",        // Index 4
             "PERDU",        // Index 5
-            "50€",          // Index 6 - Gagnant
+            "1KG",          // Index 6 - Gagnant
             "PERDU",        // Index 7
             "PERDU",        // Index 8
             "PERDU",        // Index 9
@@ -850,11 +850,11 @@
                 // Toujours afficher le résultat "PERDU" avec style médiéval
                 result.innerHTML = `
                     <div>
-                        <h3>⚔️ ÉCHEC CUISANT ! ⚔️</h3>
+                        <h3>⚔️ Peut être la prochaine fois ! ⚔️</h3>
                         <p style="font-size: clamp(16px, 4vw, 18px); margin: 8px 0; color: #ff6b6b;"><strong>${winningPrize}</strong></p>
-                        <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.9; margin-bottom: 12px;">Les dieux de la fortune ne vous sourient pas aujourd'hui !</p>
+                        <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.9; margin-bottom: 12px;">La chance ne vous sourient pas aujourd'hui !</p>
                         <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
-                            🏰 Contacter les Maîtres
+                            🏰 Contacter le support
                         </a>
                     </div>
                 `;
@@ -864,7 +864,7 @@
                 
                 isSpinning = false;
                 spinBtn.disabled = true;
-                spinBtn.textContent = '❌ QUÊTE TERMINÉE ❌';
+                spinBtn.textContent = '❌ JEU TERMINÉE ❌';
                 spinBtn.style.opacity = '0.6';
             }, 4000);
         }
@@ -873,7 +873,7 @@
             const notification = document.createElement('div');
             notification.className = 'notification';
             notification.style.animation = 'slideIn 0.3s ease-out';
-            notification.innerHTML = '⚠️ Si proche de la gloire ! Restez vigilant, de nouvelles quêtes vous attendent !';
+            notification.innerHTML = '⚠️ Si proche de la gloire ! Restez vigilant, de nouvelles chances vous attendent !';
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -898,7 +898,7 @@
         // Auto-démarrage pour les nouveaux utilisateurs avec thème médiéval
         function autoShowForNewUser() {
             setTimeout(() => {
-                showNotification('🏰 Un tour gratuit vous est accordé par les maîtres de la taverne !');
+                showNotification('🏰 Un tour gratuit vous est accordé !');
             }, 1000);
             
             // Créer un effet de "presque gagné" visuel
@@ -924,7 +924,7 @@
 
         // Écouteurs d'événements
         window.addEventListener('load', () => {
-            showNotification('⚔️ Préparez-vous pour l\'aventure... ⚔️');
+            showNotification('⚔️chargment des gains... ⚔️');
             autoShowForNewUser();
         });
 

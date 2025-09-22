@@ -297,41 +297,133 @@
         }
 
         .spin-button {
-            background: linear-gradient(145deg, #ffd700 0%, #daa520 50%, #b8860b 100%);
-            border: 4px solid #654321;
+            background: 
+                radial-gradient(circle at 30% 30%, #ffd700, #daa520),
+                linear-gradient(145deg, #ffd700 0%, #daa520 50%, #b8860b 100%);
+            border: 5px solid #654321;
             color: #2c1810;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 900;
             font-family: 'Cinzel Decorative', serif;
-            padding: 18px 50px;
-            border-radius: 50px;
+            padding: 20px 60px;
+            border-radius: 60px;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 
-                0 8px 25px rgba(255,215,0,0.4),
-                inset 0 2px 5px rgba(255,255,255,0.3),
-                inset 0 -2px 5px rgba(0,0,0,0.2);
+                0 10px 30px rgba(255,215,0,0.5),
+                0 0 50px rgba(255,215,0,0.3),
+                inset 0 3px 8px rgba(255,255,255,0.4),
+                inset 0 -3px 8px rgba(0,0,0,0.3);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             display: block;
             margin: 0 auto;
             position: relative;
             overflow: hidden;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .spin-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            transform: rotate(45deg) scale(0);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .spin-button::after {
+            content: '⚡';
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: sparkle 2s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: translateY(-50%) scale(0.8); }
+            50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
         }
 
         .spin-button:hover:not(:disabled) {
-            transform: translateY(-5px) scale(1.05);
+            transform: translateY(-8px) scale(1.1);
             box-shadow: 
-                0 12px 35px rgba(255,215,0,0.6),
-                inset 0 2px 8px rgba(255,255,255,0.4),
-                inset 0 -2px 8px rgba(0,0,0,0.2);
+                0 15px 40px rgba(255,215,0,0.7),
+                0 0 80px rgba(255,215,0,0.5),
+                inset 0 3px 12px rgba(255,255,255,0.5),
+                inset 0 -3px 12px rgba(0,0,0,0.3);
+            border-color: #ffd700;
+            background: 
+                radial-gradient(circle at 30% 30%, #ffed4a, #ffd700),
+                linear-gradient(145deg, #ffed4a 0%, #ffd700 50%, #daa520 100%);
+        }
+
+        .spin-button:hover:not(:disabled)::before {
+            transform: rotate(45deg) scale(1);
+            opacity: 1;
+            animation: shine 1s ease-in-out;
+        }
+
+        .spin-button:hover:not(:disabled)::after {
+            opacity: 1;
+            animation: sparkle 0.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg) scale(0); }
+            50% { transform: translateX(0%) translateY(0%) rotate(45deg) scale(1); opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg) scale(0); }
+        }
+
+        .spin-button:active:not(:disabled) {
+            transform: translateY(-5px) scale(1.05);
+            transition: all 0.1s ease;
         }
 
         .spin-button:disabled {
             background: linear-gradient(145deg, #666, #444);
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.5;
             border-color: #333;
+            color: #999;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .spin-button:disabled::before,
+        .spin-button:disabled::after {
+            display: none;
+        }
+
+        /* Animation de pulsation pour attirer l'attention */
+        .spin-button.ready {
+            animation: readyPulse 2s infinite;
+        }
+
+        @keyframes readyPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 10px 30px rgba(255,215,0,0.5),
+                    0 0 50px rgba(255,215,0,0.3),
+                    inset 0 3px 8px rgba(255,255,255,0.4),
+                    inset 0 -3px 8px rgba(0,0,0,0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 12px 35px rgba(255,215,0,0.7),
+                    0 0 70px rgba(255,215,0,0.5),
+                    inset 0 3px 10px rgba(255,255,255,0.5),
+                    inset 0 -3px 10px rgba(0,0,0,0.3);
+                transform: translateY(-2px);
+            }
         }
 
         /* POPUP DE BIENVENUE */
@@ -563,8 +655,8 @@
             <div class="wheel-center"></div>
         </div>
         
-        <button class="spin-button" id="spinButton" disabled>
-            Entrez votre nom d'utilisateur
+        <button class="spin-button ready" id="spinButton">
+            🎲 TOURNER LA ROUE
         </button>
     </div>
 
@@ -608,18 +700,23 @@
             
             usernameInput.addEventListener('input', function() {
                 const username = this.value.trim();
+                const spinButton = document.getElementById('spinButton');
+                
                 if (username) {
                     const remainingSpins = getRemainingSpins(username);
                     if (remainingSpins > 0) {
                         spinButton.disabled = false;
-                        spinButton.textContent = '🎲 TOURNER LA ROUE';
+                        spinButton.textContent = '🎰 TOURNER LA ROUE';
+                        spinButton.classList.add('ready');
                     } else {
                         spinButton.disabled = true;
-                        spinButton.textContent = '❌ DÉJÀ UTILISÉ';
+                        spinButton.textContent = '❌ CHANCE UTILISÉE';
+                        spinButton.classList.remove('ready');
                     }
                 } else {
-                    spinButton.disabled = true;
-                    spinButton.textContent = "Entrez votre nom d'utilisateur";
+                    spinButton.disabled = false;
+                    spinButton.textContent = '🎲 TOURNER LA ROUE';
+                    spinButton.classList.add('ready');
                 }
             });
         });
@@ -695,7 +792,13 @@
 
         function spinWheel() {
             const username = document.getElementById('telegramUsername').value.trim();
-            if (!username || isSpinning) return;
+            
+            if (!username) {
+                alert('🏰 Veuillez entrer votre nom d\'utilisateur Telegram d\'abord !');
+                return;
+            }
+            
+            if (isSpinning) return;
             
             const remainingSpins = getRemainingSpins(username);
             if (remainingSpins <= 0) {
@@ -706,6 +809,7 @@
             isSpinning = true;
             const spinButton = document.getElementById('spinButton');
             spinButton.disabled = true;
+            spinButton.classList.remove('ready');
             spinButton.textContent = '🌪️ LA ROUE TOURNE...';
             
             const wheel = document.getElementById('wheel');
@@ -731,3 +835,37 @@
                 // Reset bouton
                 isSpinning = false;
                 spinButton.textContent = '❌ CHANCE UTILISÉE';
+                
+            }, 4000);
+        }
+
+        function showResult(option, username) {
+            const popup = document.getElementById('resultPopup');
+            const title = document.getElementById('resultTitle');
+            const prizeDisplay = document.getElementById('prizeDisplay');
+            
+            if (option.type === 'win') {
+                title.textContent = '🎉 VICTOIRE !';
+                prizeDisplay.textContent = `Vous avez gagné : ${option.text}`;
+                prizeDisplay.className = 'prize-display win';
+                popup.className = 'result-popup show win';
+            } else {
+                title.textContent = '💀 ÉCHEC !';
+                prizeDisplay.textContent = `Vous tombez sur : ${option.text}`;
+                prizeDisplay.className = 'prize-display lose';
+                popup.className = 'result-popup show lose';
+            }
+            
+            popup.classList.add('show');
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('resultPopup');
+            popup.classList.remove('show', 'win', 'lose');
+        }
+
+        // Event listener pour le bouton de rotation
+        document.getElementById('spinButton').addEventListener('click', spinWheel);
+    </script>
+</body>
+</html>

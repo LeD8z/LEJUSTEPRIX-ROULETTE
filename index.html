@@ -1,473 +1,180 @@
-import React, { useState } from 'react';
-import { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Taverne de Limoges</title>
 
-const TelegramShopApp = () => {
-  const [currentView, setCurrentView] = useState('home');
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedQuantity, setSelectedQuantity] = useState(null);
+    <!-- ✅ React + ReactDOM depuis CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 
-  // Configuration - Remplacez par votre username Telegram
-  const TELEGRAM_USERNAME = '@Aladin_870';
+    <!-- ✅ Lucide React Icons depuis CDN -->
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.min.js"></script>
 
-  const categories = [
-    { 
-      id: 'weed', 
-      name: 'Weed', 
-      emoji: '🌿',
-      gradient: 'from-amber-700 via-green-800 to-emerald-900',
-      shadow: 'shadow-green-900/70',
-      glow: 'shadow-[0_0_30px_rgba(34,197,94,0.3)]'
-    },
-    { 
-      id: 'mousse', 
-      name: 'Mousse', 
-      emoji: '💨',
-      gradient: 'from-stone-700 via-amber-800 to-yellow-900',
-      shadow: 'shadow-amber-900/70',
-      glow: 'shadow-[0_0_30px_rgba(217,119,6,0.3)]'
-    },
-    { 
-      id: 'frozen', 
-      name: 'Frozen', 
-      emoji: '❄️',
-      gradient: 'from-slate-700 via-cyan-900 to-blue-900',
-      shadow: 'shadow-cyan-900/70',
-      glow: 'shadow-[0_0_30px_rgba(6,182,212,0.3)]'
-    },
-    { 
-      id: 'filtrer', 
-      name: 'Filtrer', 
-      emoji: '🔥',
-      gradient: 'from-red-900 via-orange-800 to-amber-900',
-      shadow: 'shadow-red-900/70',
-      glow: 'shadow-[0_0_30px_rgba(220,38,38,0.3)]'
-    }
-  ];
+    <!-- ✅ Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  // Définition des quantités par catégorie
-  const quantityOptions = {
-    weed: [
-      { amount: 1.4, price: 10, label: '1.4g' },
-      { amount: 2.8, price: 20, label: '2.8g' },
-      { amount: 4.5, price: 30, label: '4.5g' },
-      { amount: 11, price: 70, label: '11g' },
-      { amount: 25, price: 150, label: '25g' },
-      { amount: 50, price: 240, label: '50g' },
-      { amount: 100, price: 450, label: '100g', treasure: true }
-    ],
-    mousse: [
-      { amount: 2.3, price: 10, label: '2.3g' },
-      { amount: 4.6, price: 20, label: '4.6g' },
-      { amount: 10, price: 50, label: '10g' },
-      { amount: 25, price: 110, label: '25g' },
-      { amount: 50, price: 200, label: '50g' },
-      { amount: 100, price: 350, label: '100g', treasure: true }
-    ],
-    frozen: [
-      { amount: 0.5, price: 30, label: '0.5g' },
-      { amount: 1, price: 50, label: '1g' },
-      { amount: 2, price: 100, label: '2g' },
-      { amount: 5, price: 250, label: '5g', treasure: true },
-      { amount: 10, price: 450, label: '10g' }
-    ],
-    filtrer: [
-      { amount: 1, price: 25, label: '1g' },
-      { amount: 3, price: 70, label: '3g' },
-      { amount: 5, price: 110, label: '5g' },
-      { amount: 10, price: 200, label: '10g', treasure: true }
-    ]
-  };
-
-  const products = {
-    frozen: [
-      {
-        id: 1,
-        name: 'Frozen Premium',
-        description: 'White💎 - Pureté légendaire',
-        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        badge: '💎 Rare'
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        background-color: #1a1410;
+        color: #fff;
       }
-    ],
-    mousse: [ 
-      {
-        id: 4,
-        name: 'Jaune Mousseux',
-        description: 'Jaune Mousseux - Texture mystique',
-        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        badge: '⭐ Défonce+'
-      }
-    ],
-    weed: [
-      {
-        id: 5,
-        name: 'Weed Premium',
-        description: 'Weed Premium - Trésor ancestral',
-        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        badge: '👑 Quality++'
-      }
-    ],
-    filtrer: [
-      {
-        id: 6,
-        name: 'Filtrer Premium',
-        description: 'Filtrer - Qualité suprême',
-        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        badge: '🔥 Défonce++'
-      }
-    ]
-  };
+    </style>
+  </head>
 
-  const handleCategoryClick = (categoryId) => {
-    setSelectedCategory(categoryId);
-    const categoryProducts = products[categoryId] || [];
-    if (categoryProducts.length > 0) {
-      setSelectedProduct(categoryProducts[0]);
-      setSelectedQuantity(null);
-      setCurrentView('product-detail');
-    }
-  };
+  <body>
+    <div id="root"></div>
 
-  const handleOrder = () => {
-    if (!selectedQuantity) return;
+    <script type="text/javascript">
+      const { useState } = React;
+      const { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } = lucideReact;
 
-    const message = `🏺 *NOUVELLE COMMANDE*\n\n` +
-      `💎 Produit: ${selectedProduct.name}\n` +
-      `⚖️ Quantité: ${selectedQuantity.label}\n` +
-      `💰 Prix: ${selectedQuantity.price}€\n\n` +
-      `Que la fortune vous accompagne !`;
+      const TelegramShopApp = () => {
+        const [currentView, setCurrentView] = useState('home');
+        const [selectedCategory, setSelectedCategory] = useState(null);
+        const [selectedProduct, setSelectedProduct] = useState(null);
+        const [selectedQuantity, setSelectedQuantity] = useState(null);
 
-    const encodedMessage = encodeURIComponent(message);
-    const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
-    
-    // Copier dans le presse-papier
-    navigator.clipboard.writeText(message).then(() => {
-      // Rediriger vers Telegram
-      window.open(telegramUrl, '_blank');
-    });
-  };
+        const TELEGRAM_USERNAME = 'Aladin_870'; // Sans @
 
-  const renderHome = () => (
-    <div className="min-h-screen relative overflow-hidden" style={{
-      background: 'linear-gradient(180deg, #1a1410 0%, #2d1f0f 50%, #1a1410 100%)',
-    }}>
-      {/* Effet de texture de roche */}
-      <div className="absolute inset-0 opacity-20" style={{
-        backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(101, 67, 33, 0.3) 0%, transparent 50%)',
-      }}></div>
-      
-      {/* Particules dorées flottantes */}
-      <div className="absolute top-20 left-10 w-2 h-2 bg-yellow-500/40 rounded-full animate-pulse"></div>
-      <div className="absolute top-40 right-20 w-1.5 h-1.5 bg-amber-400/30 rounded-full animate-pulse delay-75"></div>
-      <div className="absolute bottom-60 left-1/4 w-1 h-1 bg-yellow-600/50 rounded-full animate-pulse delay-150"></div>
-      <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-orange-400/40 rounded-full animate-pulse delay-100"></div>
+        const categories = [
+          { id: 'weed', name: 'Weed', emoji: '🌿' },
+          { id: 'mousse', name: 'Mousse', emoji: '💨' },
+          { id: 'frozen', name: 'Frozen', emoji: '❄️' },
+          { id: 'filtrer', name: 'Filtrer', emoji: '🔥' }
+        ];
 
-      <div className="relative z-10 p-6">
-        {/* Header avec coffre au trésor */}
-        <div className="text-center mb-8">
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-yellow-600/20 blur-3xl rounded-full"></div>
-            <div className="relative w-28 h-28 mx-auto mb-4 rounded-2xl flex items-center justify-center transform hover:scale-110 transition-all duration-500" style={{
-              background: 'linear-gradient(135deg, #78350f 0%, #92400e 50%, #78350f 100%)',
-              boxShadow: '0 10px 40px rgba(217, 119, 6, 0.4), inset 0 2px 10px rgba(255, 255, 255, 0.1), inset 0 -2px 10px rgba(0, 0, 0, 0.5)'
-            }}>
-              <div className="text-6xl">🏺</div>
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold mb-1 tracking-wider" style={{
-            background: 'linear-gradient(to right, #fbbf24, #f59e0b, #fbbf24)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: '0 0 30px rgba(251, 191, 36, 0.5)'
-          }}>
-            La Taverne de Limoges
-          </h1>
-          <p className="text-amber-600 text-sm flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4" />
-            Prix et Qualité Premium
-            <Sparkles className="w-4 h-4" />
-          </p>
-        </div>
+        const quantityOptions = {
+          weed: [
+            { amount: 1.4, price: 10, label: '1.4g' },
+            { amount: 2.8, price: 20, label: '2.8g' },
+            { amount: 4.5, price: 30, label: '4.5g' },
+            { amount: 11, price: 70, label: '11g' },
+            { amount: 25, price: 150, label: '25g' },
+            { amount: 50, price: 240, label: '50g' },
+            { amount: 100, price: 450, label: '100g', treasure: true }
+          ],
+          mousse: [
+            { amount: 2.3, price: 10, label: '2.3g' },
+            { amount: 4.6, price: 20, label: '4.6g' },
+            { amount: 10, price: 50, label: '10g' },
+            { amount: 25, price: 110, label: '25g' },
+            { amount: 50, price: 200, label: '50g' },
+            { amount: 100, price: 350, label: '100g', treasure: true }
+          ],
+          frozen: [
+            { amount: 0.5, price: 30, label: '0.5g' },
+            { amount: 1, price: 50, label: '1g' },
+            { amount: 2, price: 100, label: '2g' },
+            { amount: 5, price: 250, label: '5g', treasure: true },
+            { amount: 10, price: 450, label: '10g' }
+          ],
+          filtrer: [
+            { amount: 1, price: 25, label: '1g' },
+            { amount: 3, price: 70, label: '3g' },
+            { amount: 5, price: 110, label: '5g' },
+            { amount: 10, price: 200, label: '10g', treasure: true }
+          ]
+        };
 
-        {/* Categories - Style coffres aux trésors */}
-        <div className="grid grid-cols-2 gap-4 mb-6 max-w-md mx-auto">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategoryClick(category.id)}
-              className={`relative p-5 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 group overflow-hidden`}
-              style={{
-                background: `linear-gradient(135deg, ${getCaveGradient(category.id)})`,
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.1), inset 0 -2px 8px rgba(0, 0, 0, 0.5)',
-              }}
-            >
-              {/* Effet de lueur */}
-              <div className={`absolute inset-0 ${category.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-              
-              {/* Reflet doré */}
-              <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
-              <div className="relative text-center">
-                <div className="text-5xl mb-2 transform group-hover:scale-110 transition-transform duration-300 filter drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
-                  {category.emoji}
-                </div>
-                <span className="text-amber-100 font-bold text-base block drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                  {category.name}
-                </span>
-                <Gem className="w-4 h-4 text-yellow-500/60 mx-auto mt-1" />
-              </div>
-            </button>
-          ))}
-        </div>
+        const products = {
+          frozen: [
+            { id: 1, name: 'Frozen Premium', description: 'White💎 - Pureté légendaire', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '💎 Rare' }
+          ],
+          mousse: [
+            { id: 4, name: 'Jaune Mousseux', description: 'Jaune Mousseux - Texture mystique', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '⭐ Défonce+' }
+          ],
+          weed: [
+            { id: 5, name: 'Weed Premium', description: 'Weed Premium - Trésor ancestral', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '👑 Quality++' }
+          ],
+          filtrer: [
+            { id: 6, name: 'Filtrer Premium', description: 'Filtrer - Qualité suprême', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '🔥 Défonce++' }
+          ]
+        };
 
-        {/* Action Buttons - Style parchemins */}
-        <div className="space-y-3 max-w-md mx-auto">
-          <button className="w-full relative py-4 px-6 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 overflow-hidden group" style={{
-            background: 'linear-gradient(135deg, #92400e 0%, #b45309 50%, #92400e 100%)',
-            boxShadow: '0 8px 24px rgba(180, 83, 9, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.1)'
-          }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-            <div className="relative flex items-center justify-center gap-3 text-amber-100">
-              <Crown className="w-5 h-5" />
-              <span>Parrainez un Ami = 1g offert</span>
-              <Sparkles className="w-4 h-4" />
-            </div>
-          </button>
-          
-          <button className="w-full relative py-4 px-6 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 overflow-hidden group" style={{
-            background: 'linear-gradient(135deg, #78350f 0%, #92400e 50%, #78350f 100%)',
-            boxShadow: '0 8px 24px rgba(146, 64, 14, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.1)'
-          }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-            <div className="relative flex items-center justify-center gap-3 text-amber-100">
-              <Scroll className="w-5 h-5" />
-              <span>Contacter le Support</span>
-            </div>
-          </button>
-          
-          <button className="w-full relative py-4 px-6 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 overflow-hidden group" style={{
-            background: 'linear-gradient(135deg, #57534e 0%, #78716c 50%, #57534e 100%)',
-            boxShadow: '0 8px 24px rgba(87, 83, 78, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.1)'
-          }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-            <div className="relative flex items-center justify-center gap-3 text-amber-100">
-              <Scroll className="w-5 h-5" />
-              <span>information</span>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+        const handleCategoryClick = (categoryId) => {
+          setSelectedCategory(categoryId);
+          const categoryProducts = products[categoryId] || [];
+          if (categoryProducts.length > 0) {
+            setSelectedProduct(categoryProducts[0]);
+            setSelectedQuantity(null);
+            setCurrentView('product-detail');
+          }
+        };
 
-  const getCaveGradient = (categoryId) => {
-    const gradients = {
-      weed: '#1a4d2e 0%, #2d5f3f 50%, #1a4d2e 100%',
-      mousse: '#78350f 0%, #92400e 50%, #78350f 100%',
-      frozen: '#1e3a5f 0%, #2d5a7e 50%, #1e3a5f 100%',
-      filtrer: '#7c2d12 0%, #991b1b 50%, #7c2d12 100%'
-    };
-    return gradients[categoryId] || gradients.weed;
-  };
+        const handleOrder = () => {
+          if (!selectedQuantity) return;
 
-  const renderProductDetail = () => {
-    const category = categories.find(c => c.id === selectedCategory);
-    const options = quantityOptions[selectedCategory] || [];
+          const message = `🏺 *NOUVELLE COMMANDE*\n\n` +
+            `💎 Produit: ${selectedProduct.name}\n` +
+            `⚖️ Quantité: ${selectedQuantity.label}\n` +
+            `💰 Prix: ${selectedQuantity.price}€\n\n` +
+            `Que la fortune vous accompagne !`;
 
-    return (
-      <div className="min-h-screen relative overflow-hidden" style={{
-        background: 'linear-gradient(180deg, #1a1410 0%, #2d1f0f 50%, #1a1410 100%)',
-      }}>
-        {/* Texture de roche */}
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(101, 67, 33, 0.3) 0%, transparent 50%)',
-        }}></div>
+          const encodedMessage = encodeURIComponent(message);
+          const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
+          navigator.clipboard.writeText(message).then(() => {
+            window.open(telegramUrl, '_blank');
+          });
+        };
 
-        <div className="relative z-10 p-5">
-          {/* Header */}
-          <div className="flex items-center mb-5">
-            <button
-              onClick={() => setCurrentView('home')}
-              className="p-2.5 rounded-xl transition-all transform hover:scale-110 active:scale-95"
-              style={{
-                background: 'linear-gradient(135deg, #78350f 0%, #92400e 100%)',
-                boxShadow: '0 4px 16px rgba(146, 64, 14, 0.5), inset 0 1px 4px rgba(255, 255, 255, 0.1)'
-              }}
-            >
-              <ChevronLeft className="w-5 h-5 text-amber-100" />
-            </button>
-            <div className="ml-3 flex-1">
-              <h2 className="text-xl font-bold text-amber-100 drop-shadow-[0_2px_8px_rgba(251,191,36,0.5)]">
-                {selectedProduct?.name}
-              </h2>
-              <p className="text-amber-600 text-xs flex items-center gap-1">
-                <span className="text-lg">{category?.emoji}</span>
-                {category?.name}
-              </p>
-            </div>
-            {selectedProduct?.badge && (
-              <div className="px-3 py-1 rounded-full text-xs font-bold" style={{
-                background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                boxShadow: '0 0 20px rgba(251, 191, 36, 0.5)',
-                color: '#78350f'
-              }}>
-                {selectedProduct.badge}
-              </div>
-            )}
-          </div>
+        const renderHome = () => (
+          React.createElement("div", { className: "min-h-screen flex items-center justify-center bg-gradient-to-b from-stone-900 to-amber-900 text-amber-100" },
+            React.createElement("div", { className: "text-center space-y-4" },
+              React.createElement("h1", { className: "text-2xl font-bold mb-4" }, "La Taverne de Limoges"),
+              React.createElement("div", { className: "grid grid-cols-2 gap-3" },
+                categories.map((cat) =>
+                  React.createElement("button", {
+                    key: cat.id,
+                    onClick: () => handleCategoryClick(cat.id),
+                    className: "p-4 bg-amber-700/40 rounded-xl hover:bg-amber-600/60 transition"
+                  },
+                    React.createElement("div", { className: "text-3xl" }, cat.emoji),
+                    React.createElement("div", null, cat.name)
+                  )
+                )
+              )
+            )
+          )
+        );
 
-          <div className="max-w-md mx-auto">
-            {/* Video - Cadre trésor */}
-            <div className="rounded-2xl overflow-hidden mb-5 relative" style={{
-              background: 'linear-gradient(135deg, #78350f 0%, #92400e 100%)',
-              boxShadow: '0 12px 40px rgba(0, 0, 0, 0.8), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
-              padding: '8px'
-            }}>
-              <video
-                className="w-full rounded-xl"
-                controls
-                poster="https://via.placeholder.com/400x300/2d1f0f/fbbf24?text=🏺+Trésor"
-              >
-                <source src={selectedProduct?.video} type="video/mp4" />
-              </video>
-            </div>
+        const renderProductDetail = () => (
+          React.createElement("div", { className: "min-h-screen p-4 bg-gradient-to-b from-stone-900 to-amber-900 text-amber-100" },
+            React.createElement("button", { onClick: () => setCurrentView('home'), className: "mb-4 flex items-center gap-2 text-sm" },
+              React.createElement(ChevronLeft, null), " Retour"
+            ),
+            React.createElement("div", { className: "space-y-4 text-center" },
+              React.createElement("h2", { className: "text-xl font-bold" }, selectedProduct?.name),
+              React.createElement("video", { className: "mx-auto rounded-lg w-full max-w-md", controls: true },
+                React.createElement("source", { src: selectedProduct?.video, type: "video/mp4" })
+              ),
+              React.createElement("p", null, selectedProduct?.description),
+              React.createElement("div", { className: "grid grid-cols-2 gap-2 max-w-md mx-auto" },
+                (quantityOptions[selectedCategory] || []).map((opt) =>
+                  React.createElement("button", {
+                    key: opt.label,
+                    onClick: () => setSelectedQuantity(opt),
+                    className: `p-3 rounded-lg border ${selectedQuantity?.amount === opt.amount ? 'bg-amber-600' : 'bg-stone-800'}`
+                  },
+                    `${opt.label} — ${opt.price}€`
+                  )
+                )
+              ),
+              selectedQuantity && React.createElement("button", {
+                onClick: handleOrder,
+                className: "bg-yellow-500 text-stone-900 font-bold py-3 px-6 rounded-lg mt-4"
+              }, `Commander ${selectedQuantity.label}`)
+            )
+          )
+        );
 
-            {/* Product Info - Parchemin */}
-            <div className="rounded-2xl p-5 mb-5 relative overflow-hidden" style={{
-              background: 'linear-gradient(135deg, #44403c 0%, #57534e 100%)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.05)',
-              border: '2px solid rgba(251, 191, 36, 0.2)'
-            }}>
-              <div className="absolute top-2 right-2">
-                <Gem className="w-5 h-5 text-amber-500/40" />
-              </div>
-              <p className="text-amber-200 text-sm leading-relaxed font-medium">
-                {selectedProduct?.description}
-              </p>
-            </div>
+        return currentView === 'home' ? renderHome() : renderProductDetail();
+      };
 
-            {/* Quantity Selector - Coffres */}
-            <div className="mb-5">
-              <label className="text-amber-100 font-bold mb-4 block text-lg flex items-center gap-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                <Coins className="w-6 h-6 text-yellow-500" />
-                Choisissez une Quantité
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                {options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedQuantity(option)}
-                    className={`relative p-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                      selectedQuantity?.amount === option.amount ? 'ring-2 ring-yellow-500' : ''
-                    }`}
-                    style={{
-                      background: selectedQuantity?.amount === option.amount
-                        ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%)'
-                        : 'linear-gradient(135deg, #57534e 0%, #78716c 50%, #57534e 100%)',
-                      boxShadow: selectedQuantity?.amount === option.amount
-                        ? '0 8px 32px rgba(251, 191, 36, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.2)'
-                        : '0 4px 16px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.05)',
-                    }}
-                  >
-                    {option.treasure && (
-                      <div className="absolute -top-2 -right-2 text-2xl animate-pulse">
-                        💎
-                      </div>
-                    )}
-                    <div className="text-center">
-                      <div className={`text-2xl font-bold mb-1 ${
-                        selectedQuantity?.amount === option.amount ? 'text-amber-900' : 'text-amber-200'
-                      }`}>
-                        {option.label}
-                      </div>
-                      <div className="flex items-center justify-center gap-1">
-                        <Coins className={`w-4 h-4 ${
-                          selectedQuantity?.amount === option.amount ? 'text-amber-800' : 'text-yellow-600'
-                        }`} />
-                        <span className={`text-xl font-bold ${
-                          selectedQuantity?.amount === option.amount ? 'text-amber-900' : 'text-yellow-500'
-                        }`}>
-                          {option.price}€
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Order Button */}
-            {selectedQuantity && (
-              <div className="space-y-3">
-                <div className="rounded-2xl p-5 relative overflow-hidden" style={{
-                  background: 'linear-gradient(135deg, #92400e 0%, #b45309 50%, #92400e 100%)',
-                  boxShadow: '0 12px 48px rgba(180, 83, 9, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
-                }}>
-                  {/* Effet de reflet doré */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent"></div>
-                  
-                  <div className="relative">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-amber-200 text-sm font-medium flex items-center gap-2">
-                        <Coins className="w-5 h-5 text-yellow-500" />
-                        Mon Panier
-                      </span>
-                      <span className="text-4xl font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(253,224,71,0.8)]">
-                        {selectedQuantity.price}€
-                      </span>
-                    </div>
-                    
-                    <button
-                      onClick={handleOrder}
-                      className="w-full py-4 px-6 rounded-xl font-bold text-base transition-all duration-300 transform hover:scale-105 active:scale-95 relative overflow-hidden group"
-                      style={{
-                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%)',
-                        boxShadow: '0 8px 32px rgba(251, 191, 36, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.3)',
-                        color: '#78350f'
-                      }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                      <div className="relative flex items-center justify-center gap-3">
-                        <ShoppingCart className="w-6 h-6" />
-                        Commander {selectedQuantity.label}
-                        <Crown className="w-5 h-5" />
-                      </div>
-                    </button>
-                  </div>
-                </div>
-
-                <p className="text-center text-amber-700 text-xs flex items-center justify-center gap-2">
-                  <Scroll className="w-4 h-4" />
-                  La Taverne De Limoges • Portail vers Telegram
-                </p>
-              </div>
-            )}
-
-            {!selectedQuantity && (
-              <div className="text-center p-8 rounded-2xl relative overflow-hidden" style={{
-                background: 'linear-gradient(135deg, #44403c 0%, #57534e 100%)',
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.05)',
-                border: '2px solid rgba(251, 191, 36, 0.2)'
-              }}>
-                <div className="text-5xl mb-3">🏺</div>
-                <Sparkles className="w-12 h-12 text-amber-600 mx-auto mb-3" />
-                <p className="text-amber-400 text-sm font-medium">
-                  Si vous rencontrez un problème, Veuillez Contactez le Support
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="font-sans">
-      {currentView === 'home' && renderHome()}
-      {currentView === 'product-detail' && renderProductDetail()}
-    </div>
-  );
-};
-
-export default TelegramShopApp;
+      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(TelegramShopApp));
+    </script>
+  </body>
+</html>

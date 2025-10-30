@@ -1,937 +1,473 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Taverne de Limoges </title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&family=Uncial+Antiqua&display=swap');
+import React, { useState } from 'react';
+import { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } from 'lucide-react';
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+const TelegramShopApp = () => {
+  const [currentView, setCurrentView] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(null);
 
-        body {
-            font-family: 'MedievalSharp', cursive;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(139, 69, 19, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(160, 82, 45, 0.2) 0%, transparent 50%),
-                linear-gradient(135deg, #1a0f0a 0%, #2d1810 25%, #1a0f0a 50%, #0f0704 75%, #000 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            color: white;
-            overflow-x: hidden;
-            background-attachment: fixed;
-            position: relative;
-        }
+  // Configuration - Remplacez par votre username Telegram
+  const TELEGRAM_USERNAME = '@Aladin_870';
 
-        /* Effets mystiques */
-        .mystic-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
+  const categories = [
+    { 
+      id: 'weed', 
+      name: 'Weed', 
+      emoji: '🌿',
+      gradient: 'from-amber-700 via-green-800 to-emerald-900',
+      shadow: 'shadow-green-900/70',
+      glow: 'shadow-[0_0_30px_rgba(34,197,94,0.3)]'
+    },
+    { 
+      id: 'mousse', 
+      name: 'Mousse', 
+      emoji: '💨',
+      gradient: 'from-stone-700 via-amber-800 to-yellow-900',
+      shadow: 'shadow-amber-900/70',
+      glow: 'shadow-[0_0_30px_rgba(217,119,6,0.3)]'
+    },
+    { 
+      id: 'frozen', 
+      name: 'Frozen', 
+      emoji: '❄️',
+      gradient: 'from-slate-700 via-cyan-900 to-blue-900',
+      shadow: 'shadow-cyan-900/70',
+      glow: 'shadow-[0_0_30px_rgba(6,182,212,0.3)]'
+    },
+    { 
+      id: 'filtrer', 
+      name: 'Filtrer', 
+      emoji: '🔥',
+      gradient: 'from-red-900 via-orange-800 to-amber-900',
+      shadow: 'shadow-red-900/70',
+      glow: 'shadow-[0_0_30px_rgba(220,38,38,0.3)]'
+    }
+  ];
 
-        .mystic-particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: radial-gradient(circle, #ffd700, #ffed4e);
-            border-radius: 50%;
-            animation: mysticalFloat 8s infinite linear;
-            box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
-        }
+  // Définition des quantités par catégorie
+  const quantityOptions = {
+    weed: [
+      { amount: 1.4, price: 10, label: '1.4g' },
+      { amount: 2.8, price: 20, label: '2.8g' },
+      { amount: 4.5, price: 30, label: '4.5g' },
+      { amount: 11, price: 70, label: '11g' },
+      { amount: 25, price: 150, label: '25g' },
+      { amount: 50, price: 240, label: '50g' },
+      { amount: 100, price: 450, label: '100g', treasure: true }
+    ],
+    mousse: [
+      { amount: 2.3, price: 10, label: '2.3g' },
+      { amount: 4.6, price: 20, label: '4.6g' },
+      { amount: 10, price: 50, label: '10g' },
+      { amount: 25, price: 110, label: '25g' },
+      { amount: 50, price: 200, label: '50g' },
+      { amount: 100, price: 350, label: '100g', treasure: true }
+    ],
+    frozen: [
+      { amount: 0.5, price: 30, label: '0.5g' },
+      { amount: 1, price: 50, label: '1g' },
+      { amount: 2, price: 100, label: '2g' },
+      { amount: 5, price: 250, label: '5g', treasure: true },
+      { amount: 10, price: 450, label: '10g' }
+    ],
+    filtrer: [
+      { amount: 1, price: 25, label: '1g' },
+      { amount: 3, price: 70, label: '3g' },
+      { amount: 5, price: 110, label: '5g' },
+      { amount: 10, price: 200, label: '10g', treasure: true }
+    ]
+  };
 
-        @keyframes mysticalFloat {
-            0% { 
-                transform: translateY(100vh) translateX(0) scale(0);
-                opacity: 0; 
-            }
-            10% { 
-                opacity: 1;
-                transform: translateY(90vh) translateX(10px) scale(1);
-            }
-            50% { 
-                transform: translateY(50vh) translateX(-20px) scale(1.2);
-            }
-            90% { 
-                opacity: 1;
-                transform: translateY(10vh) translateX(30px) scale(0.8);
-            }
-            100% { 
-                transform: translateY(-10vh) translateX(0) scale(0);
-                opacity: 0; 
-            }
-        }
+  const products = {
+    frozen: [
+      {
+        id: 1,
+        name: 'Frozen Premium',
+        description: 'White💎 - Pureté légendaire',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        badge: '💎 Rare'
+      }
+    ],
+    mousse: [ 
+      {
+        id: 4,
+        name: 'Jaune Mousseux',
+        description: 'Jaune Mousseux - Texture mystique',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        badge: '⭐ Défonce+'
+      }
+    ],
+    weed: [
+      {
+        id: 5,
+        name: 'Weed Premium',
+        description: 'Weed Premium - Trésor ancestral',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        badge: '👑 Quality++'
+      }
+    ],
+    filtrer: [
+      {
+        id: 6,
+        name: 'Filtrer Premium',
+        description: 'Filtrer - Qualité suprême',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        badge: '🔥 Défonce++'
+      }
+    ]
+  };
 
-        .flame {
-            position: absolute;
-            width: 6px;
-            height: 20px;
-            background: linear-gradient(to top, #ff4500, #ffd700, #ff8c00);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: flicker 2s infinite alternate;
-            filter: blur(0.5px);
-        }
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+    const categoryProducts = products[categoryId] || [];
+    if (categoryProducts.length > 0) {
+      setSelectedProduct(categoryProducts[0]);
+      setSelectedQuantity(null);
+      setCurrentView('product-detail');
+    }
+  };
 
-        @keyframes flicker {
-            0% { transform: scale(1) rotate(-2deg); opacity: 0.8; }
-            25% { transform: scale(1.1) rotate(2deg); opacity: 1; }
-            50% { transform: scale(0.9) rotate(-1deg); opacity: 0.9; }
-            75% { transform: scale(1.05) rotate(1deg); opacity: 1; }
-            100% { transform: scale(1) rotate(-2deg); opacity: 0.8; }
-        }
+  const handleOrder = () => {
+    if (!selectedQuantity) return;
 
-        .container {
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            padding: 0 10px;
-            position: relative;
-            z-index: 2;
-        }
+    const message = `🏺 *NOUVELLE COMMANDE*\n\n` +
+      `💎 Produit: ${selectedProduct.name}\n` +
+      `⚖️ Quantité: ${selectedQuantity.label}\n` +
+      `💰 Prix: ${selectedQuantity.price}€\n\n` +
+      `Que la fortune vous accompagne !`;
 
-        h1 {
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            margin-bottom: 20px;
-            text-shadow: 
-                3px 3px 0px #8b4513,
-                6px 6px 0px #654321,
-                9px 9px 0px #4a2c17,
-                12px 12px 20px rgba(0,0,0,0.8),
-                0 0 30px #ffd700,
-                0 0 60px #ffd700;
-            color: #ffd700;
-            font-family: 'Cinzel Decorative', serif;
-            font-weight: 900;
-            letter-spacing: 3px;
-            transform: perspective(500px) rotateX(15deg);
-            position: relative;
-        }
+    const encodedMessage = encodeURIComponent(message);
+    const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
+    
+    // Copier dans le presse-papier
+    navigator.clipboard.writeText(message).then(() => {
+      // Rediriger vers Telegram
+      window.open(telegramUrl, '_blank');
+    });
+  };
 
-        h1::before {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            box-shadow: 0 0 15px #ffd700;
-        }
+  const renderHome = () => (
+    <div className="min-h-screen relative overflow-hidden" style={{
+      background: 'linear-gradient(180deg, #1a1410 0%, #2d1f0f 50%, #1a1410 100%)',
+    }}>
+      {/* Effet de texture de roche */}
+      <div className="absolute inset-0 opacity-20" style={{
+        backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(101, 67, 33, 0.3) 0%, transparent 50%)',
+      }}></div>
+      
+      {/* Particules dorées flottantes */}
+      <div className="absolute top-20 left-10 w-2 h-2 bg-yellow-500/40 rounded-full animate-pulse"></div>
+      <div className="absolute top-40 right-20 w-1.5 h-1.5 bg-amber-400/30 rounded-full animate-pulse delay-75"></div>
+      <div className="absolute bottom-60 left-1/4 w-1 h-1 bg-yellow-600/50 rounded-full animate-pulse delay-150"></div>
+      <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-orange-400/40 rounded-full animate-pulse delay-100"></div>
 
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            box-shadow: 0 0 15px #ffd700;
-        }
-
-        .wheel-container {
-            position: relative;
-            margin: 20px auto;
-            width: min(90vw, 350px);
-            height: min(90vw, 350px);
-            max-width: 350px;
-            max-height: 350px;
-            transition: transform 0.3s ease;
-        }
-
-        .wheel-container:hover {
-            transform: scale(1.02);
-        }
-
-        .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            box-shadow: 
-                0 0 0 6px #8b4513,
-                0 0 0 10px #ffd700,
-                0 0 0 14px #654321,
-                0 15px 40px rgba(0,0,0,0.6),
-                inset 0 0 30px rgba(0,0,0,0.3);
-            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
-            background: #2c1810;
-        }
-
-        .section-text {
-            position: absolute;
-            color: white;
-            font-weight: 900;
-            font-size: clamp(10px, 2.5vw, 14px);
-            text-align: center;
-            text-shadow: 
-                2px 2px 4px rgba(0,0,0,0.9),
-                0 0 8px rgba(255,255,255,0.3);
-            pointer-events: none;
-            white-space: nowrap;
-            font-family: 'MedievalSharp', cursive;
-        }
-
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: clamp(50px, 15vw, 80px);
-            height: clamp(50px, 15vw, 80px);
-            background: 
-                radial-gradient(circle, #ffd700 0%, #daa520 30%, #b8860b 70%, #8b4513 100%);
-            border-radius: 50%;
-            box-shadow: 
-                0 0 30px rgba(255, 215, 0, 0.7),
-                inset 0 0 20px rgba(0,0,0,0.3),
-                inset 0 0 40px rgba(255,255,255,0.2);
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 4px solid #654321;
-        }
-
-        .wheel-center::before {
-            content: '⚜';
-            font-size: clamp(20px, 5vw, 32px);
-            color: #654321;
-            text-shadow: 1px 1px 2px rgba(255,215,0,0.5);
-        }
-
-        .logo-img {
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
-            border-radius: 50%;
-            display: none;
-        }
-
-        .pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: clamp(15px, 4vw, 25px) solid transparent;
-            border-right: clamp(15px, 4vw, 25px) solid transparent;
-            border-top: clamp(25px, 6vw, 40px) solid #ffd700;
-            z-index: 15;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
-            animation: bounce 2s infinite;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-        }
-
-        .pointer::after {
-            content: '';
-            position: absolute;
-            top: -30px;
-            left: -15px;
-            width: 30px;
-            height: 30px;
-            background: 
-                radial-gradient(circle, #ffd700 0%, #daa520 50%, #b8860b 100%);
-            border-radius: 50%;
-            border: 3px solid #654321;
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
-        }
-
-        .controls {
-            margin: 20px 0;
-            padding: 0 10px;
-        }
-
-        .spin-btn {
-            background: 
-                radial-gradient(circle at 30% 30%, #ffd700, #daa520),
-                linear-gradient(145deg, #ffd700 0%, #daa520 50%, #b8860b 100%);
-            border: 5px solid #654321;
-            color: #2c1810;
-            padding: clamp(15px, 4vw, 20px) clamp(30px, 7vw, 50px);
-            border-radius: 60px;
-            font-size: clamp(16px, 4vw, 22px);
-            font-weight: 900;
-            font-family: 'Cinzel Decorative', serif;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 
-                0 12px 35px rgba(255,215,0,0.5),
-                0 0 50px rgba(255,215,0,0.3),
-                inset 0 3px 8px rgba(255,255,255,0.4),
-                inset 0 -3px 8px rgba(0,0,0,0.3);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            max-width: 350px;
-            touch-action: manipulation;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .spin-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
-            transform: rotate(45deg) scale(0);
-            transition: all 0.6s ease;
-            opacity: 0;
-        }
-
-        .spin-btn::after {
-            content: '⚡';
-            position: absolute;
-            top: 50%;
-            left: 15px;
-            transform: translateY(-50%);
-            font-size: clamp(14px, 3vw, 18px);
-            opacity: 0;
-            transition: all 0.3s ease;
-            animation: sparkle 2s infinite;
-        }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: translateY(-50%) scale(0.8); }
-            50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
-        }
-
-        .spin-btn:hover:not(:disabled) {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 
-                0 18px 45px rgba(255,215,0,0.7),
-                0 0 80px rgba(255,215,0,0.5),
-                inset 0 3px 12px rgba(255,255,255,0.5),
-                inset 0 -3px 12px rgba(0,0,0,0.3);
-            border-color: #ffd700;
-            background: 
-                radial-gradient(circle at 30% 30%, #ffed4a, #ffd700),
-                linear-gradient(145deg, #ffed4a 0%, #ffd700 50%, #daa520 100%);
-        }
-
-        .spin-btn:hover:not(:disabled)::before {
-            transform: rotate(45deg) scale(1);
-            opacity: 1;
-            animation: shine 1s ease-in-out;
-        }
-
-        .spin-btn:hover:not(:disabled)::after {
-            opacity: 1;
-            animation: sparkle 0.5s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg) scale(0); }
-            50% { transform: translateX(0%) translateY(0%) rotate(45deg) scale(1); opacity: 1; }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg) scale(0); }
-        }
-
-        .spin-btn:active:not(:disabled) {
-            transform: translateY(-5px) scale(1.02);
-            transition: all 0.1s ease;
-        }
-
-        .spin-btn:disabled {
-            background: linear-gradient(145deg, #666, #444);
-            cursor: not-allowed;
-            opacity: 0.5;
-            border-color: #333;
-            color: #999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .spin-btn:disabled::before,
-        .spin-btn:disabled::after {
-            display: none;
-        }
-
-        .result {
-            margin: 15px 0;
-            padding: 20px;
-            background: 
-                radial-gradient(ellipse at center, rgba(139, 69, 19, 0.3) 0%, rgba(42, 24, 16, 0.6) 100%);
-            border: 3px solid #8b4513;
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            box-shadow: 
-                inset 0 0 30px rgba(255, 215, 0, 0.1),
-                0 0 30px rgba(0, 0, 0, 0.5),
-                0 0 60px rgba(139, 69, 19, 0.3);
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            transition: all 0.4s ease;
-            font-size: clamp(14px, 3vw, 16px);
-            position: relative;
-        }
-
-        .result::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ffd700, #8b4513, #ffd700, #8b4513);
-            border-radius: 23px;
-            z-index: -1;
-            animation: borderGlow 3s infinite alternate;
-            opacity: 0.6;
-        }
-
-        @keyframes borderGlow {
-            0% { opacity: 0.3; }
-            100% { opacity: 0.8; }
-        }
-
-        .result:hover {
-            background: 
-                radial-gradient(ellipse at center, rgba(139, 69, 19, 0.4) 0%, rgba(42, 24, 16, 0.7) 100%);
-            transform: translateY(-3px);
-            box-shadow: 
-                inset 0 0 40px rgba(255, 215, 0, 0.15),
-                0 0 40px rgba(0, 0, 0, 0.6),
-                0 0 80px rgba(139, 69, 19, 0.4);
-        }
-
-        .result h3 {
-            color: #ffd700;
-            margin-bottom: 8px;
-            font-size: clamp(18px, 4vw, 24px);
-            font-family: 'Cinzel Decorative', serif;
-            text-shadow: 
-                2px 2px 0px #8b4513,
-                4px 4px 0px #654321,
-                6px 6px 15px rgba(0,0,0,0.8);
-        }
-
-        .contact-btn {
-            background: linear-gradient(145deg, #b8860b, #8b4513);
-            border: 3px solid #654321;
-            padding: clamp(12px, 3vw, 18px) clamp(25px, 6vw, 35px);
-            border-radius: 30px;
-            color: #ffd700;
-            font-size: clamp(13px, 3vw, 16px);
-            font-weight: 700;
-            font-family: 'MedievalSharp', cursive;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 
-                0 8px 25px rgba(139, 69, 19, 0.4),
-                inset 0 2px 5px rgba(255, 215, 0, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-            touch-action: manipulation;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .contact-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 
-                0 12px 35px rgba(139, 69, 19, 0.6),
-                inset 0 2px 8px rgba(255, 215, 0, 0.3);
-            background: linear-gradient(145deg, #daa520, #b8860b);
-            border-color: #ffd700;
-        }
-
-        .contact-info {
-            margin-top: 15px;
-            padding: 20px;
-            background: 
-                radial-gradient(ellipse at center, rgba(139, 69, 19, 0.2) 0%, rgba(42, 24, 16, 0.5) 100%);
-            border: 2px solid #8b4513;
-            border-radius: 15px;
-            font-size: clamp(12px, 2.8vw, 14px);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 
-                inset 0 0 20px rgba(255, 215, 0, 0.05),
-                0 0 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .contact-info:hover {
-            background: 
-                radial-gradient(ellipse at center, rgba(139, 69, 19, 0.3) 0%, rgba(42, 24, 16, 0.6) 100%);
-            border-color: #b8860b;
-        }
-
-        .contact-info h4 {
-            font-size: clamp(16px, 3.5vw, 18px);
-            margin-bottom: 8px;
-            color: #ffd700;
-            font-family: 'Cinzel Decorative', serif;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-        }
-
-        /* Notifications style médiéval */
-        .notification {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            left: 10px;
-            max-width: calc(100vw - 20px);
-            background: 
-                radial-gradient(ellipse at center, rgba(139, 69, 19, 0.9) 0%, rgba(42, 24, 16, 0.95) 100%);
-            color: #ffd700;
-            padding: 15px 20px;
-            border-radius: 15px;
-            border: 3px solid #ffd700;
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.5),
-                0 0 30px rgba(255, 215, 0, 0.3),
-                inset 0 0 20px rgba(255, 215, 0, 0.1);
-            z-index: 1000;
-            font-weight: bold;
-            font-size: clamp(12px, 3vw, 14px);
-            text-align: center;
-            word-wrap: break-word;
-            font-family: 'MedievalSharp', cursive;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-8px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-4px);
-            }
-        }
-
-        @keyframes glow {
-            0%, 100% { 
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            }
-            50% { 
-                box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
-            }
-        }
-
-        .winning-section {
-            animation: glow 2s infinite;
-        }
-
-        /* Media queries conservées */
-        @media (max-width: 320px) {
-            .container {
-                padding: 0 5px;
-            }
-            
-            .wheel-container {
-                width: 280px;
-                height: 280px;
-            }
-            
-            h1 {
-                margin-bottom: 15px;
-            }
-            
-            .controls {
-                margin: 15px 0;
-            }
-            
-            .result {
-                padding: 15px;
-                margin: 12px 0;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .notification {
-                right: 20px;
-                left: auto;
-                max-width: 400px;
-            }
-        }
-
-        @media (hover: none) and (pointer: coarse) {
-            .spin-btn:hover {
-                transform: none;
-                box-shadow: 
-                    0 12px 35px rgba(255,215,0,0.5),
-                    0 0 50px rgba(255,215,0,0.3),
-                    inset 0 3px 8px rgba(255,255,255,0.4),
-                    inset 0 -3px 8px rgba(0,0,0,0.3);
-            }
-            
-            .contact-btn:hover {
-                transform: none;
-                box-shadow: 0 8px 25px rgba(139, 69, 19, 0.4);
-            }
-            
-            .wheel-container:hover {
-                transform: none;
-            }
-            
-            .result:hover {
-                transform: none;
-                background: 
-                    radial-gradient(ellipse at center, rgba(139, 69, 19, 0.3) 0%, rgba(42, 24, 16, 0.6) 100%);
-            }
-        }
-
-        @media (max-height: 600px) {
-            body {
-                padding: 5px;
-            }
-            
-            h1 {
-                margin-bottom: 10px;
-            }
-            
-            .wheel-container {
-                margin: 10px auto;
-            }
-            
-            .controls {
-                margin: 10px 0;
-            }
-            
-            .contact-info {
-                margin-top: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Effets mystiques -->
-    <div class="mystic-particles" id="mysticParticles"></div>
-
-    <div class="container">
-        <h1>La Taverne de Limoges </h1>
-        
-        <div class="wheel-container">
-            <div class="pointer"></div>
-            <div class="wheel" id="wheel">
-                <!-- Les sections seront générées par JavaScript -->
+      <div className="relative z-10 p-6">
+        {/* Header avec coffre au trésor */}
+        <div className="text-center mb-8">
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-yellow-600/20 blur-3xl rounded-full"></div>
+            <div className="relative w-28 h-28 mx-auto mb-4 rounded-2xl flex items-center justify-center transform hover:scale-110 transition-all duration-500" style={{
+              background: 'linear-gradient(135deg, #78350f 0%, #92400e 50%, #78350f 100%)',
+              boxShadow: '0 10px 40px rgba(217, 119, 6, 0.4), inset 0 2px 10px rgba(255, 255, 255, 0.1), inset 0 -2px 10px rgba(0, 0, 0, 0.5)'
+            }}>
+              <div className="text-6xl">🏺</div>
             </div>
-            <div class="wheel-center">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQ1IiBmaWxsPSIjZjBmMGYwIiBzdHJva2U9IiNkZGQiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNNTAgMTBDNzIuMDkxNCAxMCA5MCAyNy45MDg2IDkwIDUwQzkwIDcyLjA5MTQgNzIuMDkxNCA5MCA1MCA5MEMyNy45MDg2IDkwIDEwIDcyLjA5MTQgMTAgNTBDMTAgMjcuOTA4NiAyNy45MDg2IDEwIDUwIDEwWiIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNCIgZmlsbD0iIzMzMyIvPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjQwIiByPSI0IiBmaWxsPSIjMzMzIi8+CjxwYXRoIGQ9Ik00MCA2NVE1MCA3MCA2MCA2NSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KPHN2Zz4K" alt="Le Juste Prix" class="logo-img">
-            </div>
+          </div>
+          <h1 className="text-3xl font-bold mb-1 tracking-wider" style={{
+            background: 'linear-gradient(to right, #fbbf24, #f59e0b, #fbbf24)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 30px rgba(251, 191, 36, 0.5)'
+          }}>
+            La Taverne de Limoges
+          </h1>
+          <p className="text-amber-600 text-sm flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            Prix et Qualité Premium
+            <Sparkles className="w-4 h-4" />
+          </p>
         </div>
 
-        <div class="controls">
-            <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
-                 JE TENTE MA CHANCE 
+        {/* Categories - Style coffres aux trésors */}
+        <div className="grid grid-cols-2 gap-4 mb-6 max-w-md mx-auto">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategoryClick(category.id)}
+              className={`relative p-5 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 group overflow-hidden`}
+              style={{
+                background: `linear-gradient(135deg, ${getCaveGradient(category.id)})`,
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.1), inset 0 -2px 8px rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              {/* Effet de lueur */}
+              <div className={`absolute inset-0 ${category.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+              
+              {/* Reflet doré */}
+              <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative text-center">
+                <div className="text-5xl mb-2 transform group-hover:scale-110 transition-transform duration-300 filter drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
+                  {category.emoji}
+                </div>
+                <span className="text-amber-100 font-bold text-base block drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  {category.name}
+                </span>
+                <Gem className="w-4 h-4 text-yellow-500/60 mx-auto mt-1" />
+              </div>
             </button>
+          ))}
         </div>
 
-        <div class="result" id="result">
-            <p>✨ Tournez la roue et découvrez si la chance vous sourit ! ✨</p>
+        {/* Action Buttons - Style parchemins */}
+        <div className="space-y-3 max-w-md mx-auto">
+          <button className="w-full relative py-4 px-6 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 overflow-hidden group" style={{
+            background: 'linear-gradient(135deg, #92400e 0%, #b45309 50%, #92400e 100%)',
+            boxShadow: '0 8px 24px rgba(180, 83, 9, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.1)'
+          }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            <div className="relative flex items-center justify-center gap-3 text-amber-100">
+              <Crown className="w-5 h-5" />
+              <span>Parrainez un Ami = 1g offert</span>
+              <Sparkles className="w-4 h-4" />
+            </div>
+          </button>
+          
+          <button className="w-full relative py-4 px-6 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 overflow-hidden group" style={{
+            background: 'linear-gradient(135deg, #78350f 0%, #92400e 50%, #78350f 100%)',
+            boxShadow: '0 8px 24px rgba(146, 64, 14, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.1)'
+          }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            <div className="relative flex items-center justify-center gap-3 text-amber-100">
+              <Scroll className="w-5 h-5" />
+              <span>Contacter le Support</span>
+            </div>
+          </button>
+          
+          <button className="w-full relative py-4 px-6 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 active:scale-95 overflow-hidden group" style={{
+            background: 'linear-gradient(135deg, #57534e 0%, #78716c 50%, #57534e 100%)',
+            boxShadow: '0 8px 24px rgba(87, 83, 78, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.1)'
+          }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            <div className="relative flex items-center justify-center gap-3 text-amber-100">
+              <Scroll className="w-5 h-5" />
+              <span>information</span>
+            </div>
+          </button>
         </div>
-
-        <div class="contact-info">
-            <h4>🏆 Et si je gagne ?</h4>
-            <p>📜 Capturez votre victoire et contactez le support ! 📜</p>
-        </div>
+      </div>
     </div>
+  );
 
-    <script>
-        // Création des effets mystiques
-        function createMysticalEffects() {
-            const mysticContainer = document.getElementById('mysticParticles');
-            
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'mystic-particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 8 + 's';
-                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
-                mysticContainer.appendChild(particle);
-            }
+  const getCaveGradient = (categoryId) => {
+    const gradients = {
+      weed: '#1a4d2e 0%, #2d5f3f 50%, #1a4d2e 100%',
+      mousse: '#78350f 0%, #92400e 50%, #78350f 100%',
+      frozen: '#1e3a5f 0%, #2d5a7e 50%, #1e3a5f 100%',
+      filtrer: '#7c2d12 0%, #991b1b 50%, #7c2d12 100%'
+    };
+    return gradients[categoryId] || gradients.weed;
+  };
 
-            // Flammes mystiques
-            for (let i = 0; i < 15; i++) {
-                const flame = document.createElement('div');
-                flame.className = 'flame';
-                flame.style.left = Math.random() * 100 + '%';
-                flame.style.top = Math.random() * 100 + '%';
-                flame.style.animationDelay = Math.random() * 2 + 's';
-                flame.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-                mysticContainer.appendChild(flame);
-            }
-        }
+  const renderProductDetail = () => {
+    const category = categories.find(c => c.id === selectedCategory);
+    const options = quantityOptions[selectedCategory] || [];
 
-        // Votre logique originale conservée intégralement
-        let prizes = [
-            "5G OFFERT",    // Index 0 - Gagnant
-            "PERDU",        // Index 1
-            "PERDU",        // Index 2
-            "PERDU",        // Index 3
-            "PERDU",        // Index 4
-            "PERDU",        // Index 5
-            "1KG",          // Index 6 - Gagnant
-            "PERDU",        // Index 7
-            "PERDU",        // Index 8
-            "PERDU",        // Index 9
-            "CIGARETTE",    // Index 10 - Gagnant
-            "PERDU"         // Index 11
-        ];
+    return (
+      <div className="min-h-screen relative overflow-hidden" style={{
+        background: 'linear-gradient(180deg, #1a1410 0%, #2d1f0f 50%, #1a1410 100%)',
+      }}>
+        {/* Texture de roche */}
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(101, 67, 33, 0.3) 0%, transparent 50%)',
+        }}></div>
 
-        let winningIndexes = [0, 6, 10]; // Seulement 3 cases gagnantes
-        let losingIndexes = [1, 2, 3, 4, 5, 7, 8, 9, 11]; // 9 cases perdantes
-        let isSpinning = false;
-        let hasPlayed = false;
+        <div className="relative z-10 p-5">
+          {/* Header */}
+          <div className="flex items-center mb-5">
+            <button
+              onClick={() => setCurrentView('home')}
+              className="p-2.5 rounded-xl transition-all transform hover:scale-110 active:scale-95"
+              style={{
+                background: 'linear-gradient(135deg, #78350f 0%, #92400e 100%)',
+                boxShadow: '0 4px 16px rgba(146, 64, 14, 0.5), inset 0 1px 4px rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              <ChevronLeft className="w-5 h-5 text-amber-100" />
+            </button>
+            <div className="ml-3 flex-1">
+              <h2 className="text-xl font-bold text-amber-100 drop-shadow-[0_2px_8px_rgba(251,191,36,0.5)]">
+                {selectedProduct?.name}
+              </h2>
+              <p className="text-amber-600 text-xs flex items-center gap-1">
+                <span className="text-lg">{category?.emoji}</span>
+                {category?.name}
+              </p>
+            </div>
+            {selectedProduct?.badge && (
+              <div className="px-3 py-1 rounded-full text-xs font-bold" style={{
+                background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                boxShadow: '0 0 20px rgba(251, 191, 36, 0.5)',
+                color: '#78350f'
+              }}>
+                {selectedProduct.badge}
+              </div>
+            )}
+          </div>
 
-        // Couleurs médiévales : gris sombre pour PERDU, couleurs vives pour les gagnantes
-        const colors = [
-            '#8B4513',      // Rouge foncé pour "1G OFFERT"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#8B4513',      // Vert foncé pour "50€"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#4A4A4A',      // Gris foncé pour "PERDU"
-            '#8B4513',      // Brun pour "CIGARETTE"
-            '#4A4A4A'       // Gris foncé pour "PERDU"
-        ];
+          <div className="max-w-md mx-auto">
+            {/* Video - Cadre trésor */}
+            <div className="rounded-2xl overflow-hidden mb-5 relative" style={{
+              background: 'linear-gradient(135deg, #78350f 0%, #92400e 100%)',
+              boxShadow: '0 12px 40px rgba(0, 0, 0, 0.8), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
+              padding: '8px'
+            }}>
+              <video
+                className="w-full rounded-xl"
+                controls
+                poster="https://via.placeholder.com/400x300/2d1f0f/fbbf24?text=🏺+Trésor"
+              >
+                <source src={selectedProduct?.video} type="video/mp4" />
+              </video>
+            </div>
 
-        function getWheelSize() {
-            const container = document.querySelector('.wheel-container');
-            return container.offsetWidth;
-        }
+            {/* Product Info - Parchemin */}
+            <div className="rounded-2xl p-5 mb-5 relative overflow-hidden" style={{
+              background: 'linear-gradient(135deg, #44403c 0%, #57534e 100%)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.05)',
+              border: '2px solid rgba(251, 191, 36, 0.2)'
+            }}>
+              <div className="absolute top-2 right-2">
+                <Gem className="w-5 h-5 text-amber-500/40" />
+              </div>
+              <p className="text-amber-200 text-sm leading-relaxed font-medium">
+                {selectedProduct?.description}
+              </p>
+            </div>
 
-        function createWheel() {
-            const wheel = document.getElementById('wheel');
-            const sectionAngle = 360 / prizes.length;
-            const wheelSize = getWheelSize();
-            const centerX = wheelSize / 2;
-            const centerY = wheelSize / 2;
-            const radius = (wheelSize / 2) - 5;
-            const textRadius = wheelSize * 0.25; // Responsive text radius
-            
-            wheel.innerHTML = '';
-            
-            prizes.forEach((prize, index) => {
-                // Créer une section SVG pour une vraie part de gâteau
-                const section = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                section.style.position = 'absolute';
-                section.style.top = '0';
-                section.style.left = '0';
-                section.style.width = '100%';
-                section.style.height = '100%';
-                section.style.pointerEvents = 'none';
-                
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                
-                // Calculer les coordonnées pour une vraie part de gâteau
-                const startAngle = (index * sectionAngle - 90) * Math.PI / 180;
-                const endAngle = ((index + 1) * sectionAngle - 90) * Math.PI / 180;
-                
-                const x1 = centerX + radius * Math.cos(startAngle);
-                const y1 = centerY + radius * Math.sin(startAngle);
-                const x2 = centerX + radius * Math.cos(endAngle);
-                const y2 = centerY + radius * Math.sin(endAngle);
-                
-                const largeArcFlag = sectionAngle > 180 ? 1 : 0;
-                
-                const pathData = [
-                    `M ${centerX} ${centerY}`,
-                    `L ${x1} ${y1}`,
-                    `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-                    'Z'
-                ].join(' ');
-                
-                path.setAttribute('d', pathData);
-                path.setAttribute('fill', colors[index]);
-                path.setAttribute('stroke', '#8b4513');
-                path.setAttribute('stroke-width', '2');
-                
-                // Effet spécial pour les cases gagnantes avec style médiéval
-                if (winningIndexes.includes(index)) {
-                    path.setAttribute('filter', 'drop-shadow(0 0 12px rgba(255,215,0,0.8))');
-                    path.setAttribute('stroke', '#ffd700');
-                    path.setAttribute('stroke-width', '3');
-                }
-                
-                section.appendChild(path);
-                wheel.appendChild(section);
-                
-                // Ajouter le texte
-                const textDiv = document.createElement('div');
-                textDiv.className = 'section-text';
-                textDiv.textContent = prize;
-                
-                // Calculer la position pour aligner le texte
-                const textAngle = startAngle + (endAngle - startAngle) / 2;
-                const textX = centerX + textRadius * Math.cos(textAngle);
-                const textY = centerY + textRadius * Math.sin(textAngle);
-                
-                textDiv.style.position = 'absolute';
-                textDiv.style.left = textX + 'px';
-                textDiv.style.top = textY + 'px';
-                textDiv.style.transform = `translate(-50%, -50%) rotate(${(textAngle * 180 / Math.PI)}deg)`;
-                textDiv.style.transformOrigin = 'center';
-                
-                // Style spécial pour les gagnants avec flair médiéval
-                if (winningIndexes.includes(index)) {
-                    textDiv.style.fontSize = `clamp(13px, ${wheelSize * 0.045}px, 17px)`;
-                    textDiv.style.fontWeight = '900';
-                    textDiv.style.color = '#ffd700';
-                    textDiv.style.textShadow = '2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(255,215,0,0.5)';
-                }
-                
-                wheel.appendChild(textDiv);
-            });
-        }
-
-        function spinWheel() {
-            if (isSpinning || hasPlayed) return;
-            
-            isSpinning = true;
-            hasPlayed = true;
-            const spinBtn = document.getElementById('spinBtn');
-            const wheel = document.getElementById('wheel');
-            const result = document.getElementById('result');
-            
-            spinBtn.disabled = true;
-            spinBtn.textContent = 'Chargement...';
-            
-            // FORCER LA ROUE À TOUJOURS TOMBER SUR "PERDU"
-            const losingIndex = losingIndexes[Math.floor(Math.random() * losingIndexes.length)];
-            const sectionAngle = 360 / prizes.length;
-            
-            // Calculer l'angle exact pour tomber sur la case perdante choisie
-            const targetAngle = (losingIndex * sectionAngle) + (sectionAngle / 2);
-            const randomSpins = 4 + Math.floor(Math.random() * 3); // 4 à 6 tours complets
-            const finalRotation = (randomSpins * 360) + (360 - targetAngle);
-            
-            wheel.style.transform = `rotate(${finalRotation}deg)`;
-            
-            setTimeout(() => {
-                const winningPrize = prizes[losingIndex];
-                
-                // Toujours afficher le résultat "PERDU" avec style médiéval
-                result.innerHTML = `
-                    <div>
-                        <h3> Peut être la prochaine fois ! </h3>
-                        <p style="font-size: clamp(16px, 4vw, 18px); margin: 8px 0; color: #ff6b6b;"><strong>${winningPrize}</strong></p>
-                        <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.9; margin-bottom: 12px;">La chance ne vous sourient pas aujourd'hui !</p>
-                        <a href="https://t.me/lejusteprixch" target="_blank" class="contact-btn">
-                            🏰 Contacter le support
-                        </a>
+            {/* Quantity Selector - Coffres */}
+            <div className="mb-5">
+              <label className="text-amber-100 font-bold mb-4 block text-lg flex items-center gap-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                <Coins className="w-6 h-6 text-yellow-500" />
+                Choisissez une Quantité
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedQuantity(option)}
+                    className={`relative p-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                      selectedQuantity?.amount === option.amount ? 'ring-2 ring-yellow-500' : ''
+                    }`}
+                    style={{
+                      background: selectedQuantity?.amount === option.amount
+                        ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%)'
+                        : 'linear-gradient(135deg, #57534e 0%, #78716c 50%, #57534e 100%)',
+                      boxShadow: selectedQuantity?.amount === option.amount
+                        ? '0 8px 32px rgba(251, 191, 36, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.2)'
+                        : '0 4px 16px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.05)',
+                    }}
+                  >
+                    {option.treasure && (
+                      <div className="absolute -top-2 -right-2 text-2xl animate-pulse">
+                        💎
+                      </div>
+                    )}
+                    <div className="text-center">
+                      <div className={`text-2xl font-bold mb-1 ${
+                        selectedQuantity?.amount === option.amount ? 'text-amber-900' : 'text-amber-200'
+                      }`}>
+                        {option.label}
+                      </div>
+                      <div className="flex items-center justify-center gap-1">
+                        <Coins className={`w-4 h-4 ${
+                          selectedQuantity?.amount === option.amount ? 'text-amber-800' : 'text-yellow-600'
+                        }`} />
+                        <span className={`text-xl font-bold ${
+                          selectedQuantity?.amount === option.amount ? 'text-amber-900' : 'text-yellow-500'
+                        }`}>
+                          {option.price}€
+                        </span>
+                      </div>
                     </div>
-                `;
-                
-                // Animation de "presque gagné" pour créer de la frustration
-                showAlmostWonNotification();
-                
-                isSpinning = false;
-                spinBtn.disabled = true;
-                spinBtn.textContent = ' VOUS AVEZ DEJA SAISIT VOTRE CHANCE ';
-                spinBtn.style.opacity = '0.6';
-            }, 4000);
-        }
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        function showAlmostWonNotification() {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.animation = 'slideIn 0.3s ease-out';
-            notification.innerHTML = '⚠️ Si proche de la gloire ! Restez vigilant, de nouvelles chances vous attendent !';
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-in forwards';
-                setTimeout(() => notification.remove(), 300);
-            }, 5000);
-        }
+            {/* Order Button */}
+            {selectedQuantity && (
+              <div className="space-y-3">
+                <div className="rounded-2xl p-5 relative overflow-hidden" style={{
+                  background: 'linear-gradient(135deg, #92400e 0%, #b45309 50%, #92400e 100%)',
+                  boxShadow: '0 12px 48px rgba(180, 83, 9, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.1)',
+                }}>
+                  {/* Effet de reflet doré */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent"></div>
+                  
+                  <div className="relative">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-amber-200 text-sm font-medium flex items-center gap-2">
+                        <Coins className="w-5 h-5 text-yellow-500" />
+                        Mon Panier
+                      </span>
+                      <span className="text-4xl font-bold text-yellow-300 drop-shadow-[0_0_12px_rgba(253,224,71,0.8)]">
+                        {selectedQuantity.price}€
+                      </span>
+                    </div>
+                    
+                    <button
+                      onClick={handleOrder}
+                      className="w-full py-4 px-6 rounded-xl font-bold text-base transition-all duration-300 transform hover:scale-105 active:scale-95 relative overflow-hidden group"
+                      style={{
+                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%)',
+                        boxShadow: '0 8px 32px rgba(251, 191, 36, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.3)',
+                        color: '#78350f'
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                      <div className="relative flex items-center justify-center gap-3">
+                        <ShoppingCart className="w-6 h-6" />
+                        Commander {selectedQuantity.label}
+                        <Crown className="w-5 h-5" />
+                      </div>
+                    </button>
+                  </div>
+                </div>
 
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.animation = 'slideIn 0.3s ease-out';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-in forwards';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
+                <p className="text-center text-amber-700 text-xs flex items-center justify-center gap-2">
+                  <Scroll className="w-4 h-4" />
+                  La Taverne De Limoges • Portail vers Telegram
+                </p>
+              </div>
+            )}
 
-        // Auto-démarrage pour les nouveaux utilisateurs avec thème médiéval
-        function autoShowForNewUser() {
-            setTimeout(() => {
-                showNotification('🏰 Un tour gratuit vous est accordé !');
-            }, 1000);
-            
-            // Créer un effet de "presque gagné" visuel
-            setTimeout(() => {
-                const wheel = document.querySelector('.wheel-container');
-                wheel.style.animation = 'pulse 0.8s ease-in-out 2';
-                setTimeout(() => {
-                    wheel.style.animation = '';
-                }, 1600);
-            }, 2000);
-        }
+            {!selectedQuantity && (
+              <div className="text-center p-8 rounded-2xl relative overflow-hidden" style={{
+                background: 'linear-gradient(135deg, #44403c 0%, #57534e 100%)',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.05)',
+                border: '2px solid rgba(251, 191, 36, 0.2)'
+              }}>
+                <div className="text-5xl mb-3">🏺</div>
+                <Sparkles className="w-12 h-12 text-amber-600 mx-auto mb-3" />
+                <p className="text-amber-400 text-sm font-medium">
+                  Si vous rencontrez un problème, Veuillez Contactez le Support
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
-        // Recalculer la roue lors du redimensionnement
-        function handleResize() {
-            createWheel();
-        }
+  return (
+    <div className="font-sans">
+      {currentView === 'home' && renderHome()}
+      {currentView === 'product-detail' && renderProductDetail()}
+    </div>
+  );
+};
 
-        // Initialisation avec effets mystiques
-        document.addEventListener('DOMContentLoaded', function() {
-            createMysticalEffects();
-            createWheel();
-        });
-
-        // Écouteurs d'événements
-        window.addEventListener('load', () => {
-            showNotification('⚔️chargment des gains... ⚔️');
-            autoShowForNewUser();
-        });
-
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', () => {
-            setTimeout(handleResize, 100);
-        });
-    </script>
-</body>
-</html>
+export default TelegramShopApp;

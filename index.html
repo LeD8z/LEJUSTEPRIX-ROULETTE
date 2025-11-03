@@ -22,6 +22,9 @@
   label { display: block; margin-top: 10px; font-weight: bold; }
   input[type="range"] { width: 100%; margin-top: 5px; }
   textarea { width: 100%; border-radius: 8px; padding: 10px; border: 1px solid #fbbf24; background: rgba(255,255,255,0.1); color: #fbbf24; margin-top: 5px; }
+  /* Pulse animation */
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+  .pulse { animation: pulse 2s infinite; }
 </style>
 </head>
 <body>

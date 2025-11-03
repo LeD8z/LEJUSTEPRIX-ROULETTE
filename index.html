@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Taverne de Limoges</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React et ReactDOM UMD -->
+  <!-- React & ReactDOM UMD -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <!-- Lucide UMD -->
@@ -15,7 +16,7 @@
   <div id="root"></div>
 
   <script>
-    // Tout se fait dans un script standard, pas de Babel
+    // Tout dans un IIFE pour éviter les problèmes CSP
     (function() {
       const { ShoppingCart, ChevronLeft } = window.lucide;
       const { useState } = React;

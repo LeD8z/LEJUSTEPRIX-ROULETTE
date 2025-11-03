@@ -9,25 +9,22 @@
   <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <!-- Lucide Icons -->
-  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.js"></script>
+  <!-- Lucide Icons (onload pour s'assurer qu'il est chargé) -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.js" onload="initApp()"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans">
   <div id="root"></div>
 
   <script>
-    // Attendre que Lucide soit chargé correctement
-    function waitForLucide(callback) {
-      if (window.lucide) {
-        callback(window.lucide);
-      } else {
-        setTimeout(() => waitForLucide(callback), 50);
+    function initApp() {
+      // Assurez-vous que lucide est bien chargé
+      if (!window.lucide) {
+        console.error("Lucide non chargé !");
+        return;
       }
-    }
 
-    waitForLucide((lucide) => {
+      const { ShoppingCart, ChevronLeft } = window.lucide;
       const { useState } = React;
-      const { ShoppingCart, ChevronLeft } = lucide;
 
       function App() {
         const [view, setView] = useState('home');
@@ -98,7 +95,7 @@
 
       const root = ReactDOM.createRoot(document.getElementById('root'));
       root.render(React.createElement(App));
-    });
+    }
   </script>
 </body>
 </html>

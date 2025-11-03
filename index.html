@@ -4,140 +4,101 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Telegram Shop App</title>
-  <!-- Tailwind CDN -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React & ReactDOM CDN -->
+  <!-- React + ReactDOM CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <!-- Lucide React CDN -->
-  <script type="module">
-    import * as Lucide from 'https://cdn.jsdelivr.net/npm/lucide-react@0.278.0/dist/esm/lucide-react.js';
-    window.Lucide = Lucide;
-  </script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body class="bg-gray-900">
 
 <div id="root"></div>
 
 <script type="text/javascript">
-  const { useState } = React;
-  const { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } = window.Lucide;
+const { useState } = React;
+const { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } = window.Lucide;
 
-  function TelegramShopApp() {
-    const [currentView, setCurrentView] = useState('home');
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [selectedQuantity, setSelectedQuantity] = useState(null);
-    const [bulkQuantity, setBulkQuantity] = useState(100);
-    const [isBulkMode, setIsBulkMode] = useState(false);
-    const [showBulkSection, setShowBulkSection] = useState(false);
-    const [deliveryAddress, setDeliveryAddress] = useState('');
-    const [isPriorityDelivery, setIsPriorityDelivery] = useState(false);
+function TelegramShopApp() {
+  const [currentView, setCurrentView] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(null);
 
-    const TELEGRAM_USERNAME = '@Aladin_870';
-    const TELEGRAM_CHANNEL = 'https://t.me/+zXPeOM38QjszYzdk';
+  const TELEGRAM_USERNAME = '@Aladin_870';
 
-    const categories = [
-      { id: 'weed', name: 'Weed', emoji: '🌿', gradient: 'from-amber-700 via-green-800 to-emerald-900', glow: 'shadow-[0_0_30px_rgba(34,197,94,0.3)]' },
-      { id: 'mousse', name: 'Jaune Mousseux', emoji: '💨', gradient: 'from-stone-700 via-amber-800 to-yellow-900', glow: 'shadow-[0_0_30px_rgba(217,119,6,0.3)]' },
-      { id: 'frozen', name: 'Frozen', emoji: '❄️', gradient: 'from-slate-700 via-cyan-900 to-blue-900', glow: 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' },
-      { id: 'filtrer', name: 'Filtrer', emoji: '🔥', gradient: 'from-red-900 via-orange-800 to-amber-900', glow: 'shadow-[0_0_30px_rgba(220,38,38,0.3)]' },
-      { id: 'static', name: 'Static Premium', emoji: '⚡', gradient: 'from-gray-800 via-gray-700 to-gray-900', glow: 'shadow-[0_0_30px_rgba(107,114,128,0.3)]' }
-    ];
+  const categories = [
+    { id: 'weed', name: 'Weed', emoji: '🌿' },
+    { id: 'mousse', name: 'Jaune Mousseux', emoji: '💨' },
+    { id: 'frozen', name: 'Frozen', emoji: '❄️' },
+    { id: 'filtrer', name: 'Filtrer', emoji: '🔥' },
+    { id: 'static', name: 'Static Premium', emoji: '⚡' }
+  ];
 
-    const quantityOptions = {
-      weed: [ { amount: 1.4, price: 10, label: '1.4g' }, { amount: 2.8, price: 20, label: '2.8g' }, { amount: 4.5, price: 30, label: '4.5g' }, { amount: 11, price: 70, label: '11g' }, { amount: 25, price: 150, label: '25g' }, { amount: 50, price: 240, label: '50g' }, { amount: 100, price: 450, label: '100g', treasure: true } ],
-      mousse: [ { amount: 2.3, price: 10, label: '2.3g' }, { amount: 4.6, price: 20, label: '4.6g' }, { amount: 10, price: 50, label: '10g' }, { amount: 25, price: 110, label: '25g' }, { amount: 50, price: 200, label: '50g' }, { amount: 100, price: 350, label: '100g', treasure: true } ],
-      frozen: [ { amount: 0.5, price: 30, label: '0.5g' }, { amount: 1, price: 50, label: '1g' }, { amount: 2, price: 100, label: '2g' }, { amount: 5, price: 250, label: '5g', treasure: true }, { amount: 10, price: 450, label: '10g' } ],
-      filtrer: [ { amount: 1, price: 25, label: '1g' }, { amount: 3, price: 70, label: '3g' }, { amount: 5, price: 110, label: '5g' }, { amount: 10, price: 200, label: '10g', treasure: true } ],
-      static: [ { amount: 1.2, price: 10, label: '1.2g' }, { amount: 2.4, price: 20, label: '2.4g' }, { amount: 5, price: 40, label: '5g' }, { amount: 10, price: 80, label: '10g' }, { amount: 25, price: 180, label: '25g' }, { amount: 50, price: 300, label: '50g' }, { amount: 100, price: 550, label: '100g', treasure: true } ]
-    };
+  const products = {
+    weed: [{ id: 1, name: 'Weed Premium', description: 'Weed Premium - Trésor ancestral', badge: '👑 Quality++' }],
+    mousse: [{ id: 2, name: 'Jaune Mousseux', description: 'Jaune Mousseux - Texture mystique', badge: '⭐ Défonce+' }],
+    frozen: [{ id: 3, name: 'Frozen Premium', description: 'White💎 - Pureté légendaire', badge: '💎 Rare' }],
+    filtrer: [{ id: 4, name: 'Filtrer Premium', description: 'Filtrer - Qualité suprême', badge: '🔥 Défonce++' }],
+    static: [{ id: 5, name: 'Static Premium', description: 'Static Premium - Qualité suprême', badge: '⚡ Premium' }]
+  };
 
-    const products = {
-      frozen: [ { id: 1, name: 'Frozen Premium', description: 'White💎 - Pureté légendaire', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '💎 Rare' } ],
-      mousse: [ { id: 4, name: 'Jaune Mousseux', description: 'Jaune Mousseux - Texture mystique', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '⭐ Défonce+' } ],
-      weed: [ { id: 5, name: 'Weed Premium', description: 'Weed Premium - Trésor ancestral', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '👑 Quality++' } ],
-      filtrer: [ { id: 6, name: 'Filtrer Premium', description: 'Filtrer - Qualité suprême', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '🔥 Défonce++' } ],
-      static: [ { id: 7, name: 'Static Premium', description: 'Static Premium - Qualité suprême', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '⚡ Premium' } ]
-    };
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+    const categoryProducts = products[categoryId];
+    if (categoryProducts && categoryProducts.length > 0) {
+      setSelectedProduct(categoryProducts[0]);
+      setCurrentView('product-detail');
+    }
+  };
 
-    const handleCategoryClick = (categoryId) => {
-      setSelectedCategory(categoryId);
-      const categoryProducts = products[categoryId] || [];
-      if (categoryProducts.length > 0) {
-        setSelectedProduct(categoryProducts[0]);
-        setSelectedQuantity(null);
-        setCurrentView('product-detail');
-      }
-    };
+  const renderHome = () => (
+    <div className="min-h-screen p-6 text-center bg-gradient-to-b from-gray-800 to-gray-900">
+      <h1 className="text-4xl font-bold text-yellow-400 mb-6">La Taverne de Limoges</h1>
+      <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
+        {categories.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => handleCategoryClick(cat.id)}
+            className="p-4 bg-gray-700 rounded-xl hover:scale-105 transition-transform"
+          >
+            <div className="text-3xl mb-2">{cat.emoji}</div>
+            <div className="font-bold text-yellow-300">{cat.name}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
-    const calculateBulkPrice = (grams) => {
-      const basePrice = selectedCategory === 'weed' ? 4.5 :
-                        selectedCategory === 'mousse' ? 3.5 :
-                        selectedCategory === 'frozen' ? 45 :
-                        selectedCategory === 'filtrer' ? 2 :
-                        selectedCategory === 'static' ? 2 : 4;
-      return Math.round(grams * basePrice);
-    };
+  const renderProductDetail = () => (
+    <div className="min-h-screen p-6 bg-gray-800 text-yellow-100">
+      <button onClick={() => setCurrentView('home')} className="flex items-center mb-4">
+        <ChevronLeft className="w-5 h-5 mr-2" />
+        Retour
+      </button>
+      <h2 className="text-2xl font-bold mb-2">{selectedProduct?.name}</h2>
+      <p className="mb-4">{selectedProduct?.description}</p>
+      {selectedProduct?.badge && <span className="inline-block mb-4 px-2 py-1 bg-yellow-500 rounded">{selectedProduct.badge}</span>}
+      <button
+        onClick={() => alert('Commande envoyée à Telegram!')}
+        className="mt-6 px-6 py-3 bg-yellow-500 text-gray-900 rounded-xl font-bold flex items-center gap-2 hover:bg-yellow-400 transition-colors"
+      >
+        <ShoppingCart className="w-5 h-5" />
+        Commander
+      </button>
+    </div>
+  );
 
-    const handleOrder = () => {
-      if (!selectedQuantity && !isBulkMode) return;
-      const finalQuantity = isBulkMode ? bulkQuantity : selectedQuantity.amount;
-      const finalPrice = isBulkMode ? calculateBulkPrice(bulkQuantity) : selectedQuantity.price;
-      const finalLabel = isBulkMode ? `${bulkQuantity}g` : selectedQuantity.label;
-      const totalPrice = isPriorityDelivery ? finalPrice + 5 : finalPrice;
+  return (
+    <div>
+      {currentView === 'home' && renderHome()}
+      {currentView === 'product-detail' && renderProductDetail()}
+    </div>
+  );
+}
 
-      const message = `🏺 *NOUVELLE COMMANDE*\n\n💎 Produit: ${selectedProduct.name}\n⚖️ Quantité: ${finalLabel}\n💰 Prix produit: ${finalPrice}€\n${isPriorityDelivery ? '⚡ Livraison Prioritaire: +5€\n' : ''}💳 Total: ${totalPrice}€\n\n📍 Adresse de livraison:\n${deliveryAddress || 'Non renseignée'}\n\nQue la fortune vous accompagne !`;
-
-      const encodedMessage = encodeURIComponent(message);
-      const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
-      navigator.clipboard.writeText(message).then(() => { window.open(telegramUrl, '_blank'); });
-    };
-
-    const handleReferral = () => {
-      const referralMessage = `🎁 Vous avez été Parrainez 🎁\n\nRejoins-nous et bénéficiez de 1G gratuit sur votre première commande !\n💎 Qualité garantie\n⚡ Livraison rapide\n🎁 1G offert à chaques Parrainage !\n\n👉 Cliquez ici : ${TELEGRAM_CHANNEL}`;
-      const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(TELEGRAM_CHANNEL)}&text=${encodeURIComponent(referralMessage)}`;
-      window.open(telegramShareUrl, '_blank');
-    };
-
-    const getCaveGradient = (categoryId) => {
-      const gradients = { weed: '#1a4d2e 0%, #2d5f3f 50%, #1a4d2e 100%', mousse: '#78350f 0%, #92400e 50%, #78350f 100%', frozen: '#1e3a5f 0%, #2d5a7e 50%, #1e3a5f 100%', filtrer: '#7c2d12 0%, #991b1b 50%, #7c2d12 100%', static: '#1f2937 0%, #374151 50%, #1f2937 100%' };
-      return gradients[categoryId] || gradients.weed;
-    };
-
-    // --- Rendu de la page Home (simplifié) ---
-    const renderHome = () => (
-      React.createElement('div', { className: 'min-h-screen p-6 text-center text-amber-100' },
-        React.createElement('h1', { className: 'text-3xl font-bold mb-6' }, 'La Taverne de Limoges'),
-        React.createElement('div', { className: 'grid grid-cols-3 gap-3 max-w-lg mx-auto' },
-          categories.map(cat =>
-            React.createElement('button', { key: cat.id, className: 'p-4 rounded-2xl bg-gray-700 hover:scale-105 transition', onClick: () => handleCategoryClick(cat.id) },
-              cat.emoji, React.createElement('br', null), cat.name
-            )
-          )
-        ),
-        React.createElement('button', { className: 'mt-6 p-4 rounded-xl bg-yellow-600', onClick: handleReferral }, 'Parrainez un Ami = 1g offert')
-      )
-    );
-
-    // --- Rendu de la page Product Detail (simplifié) ---
-    const renderProductDetail = () => (
-      React.createElement('div', { className: 'min-h-screen p-5 text-amber-100' },
-        React.createElement('button', { className: 'p-2 rounded bg-gray-700 mb-4', onClick: () => setCurrentView('home') }, React.createElement(ChevronLeft, { className: 'w-5 h-5' }), ' Retour'),
-        React.createElement('h2', { className: 'text-xl font-bold mb-4' }, selectedProduct?.name),
-        React.createElement('p', null, selectedProduct?.description),
-        selectedQuantity || isBulkMode ?
-          React.createElement('button', { className: 'mt-4 p-4 bg-yellow-500 rounded-xl', onClick: handleOrder }, 'Commander') :
-          null
-      )
-    );
-
-    return React.createElement('div', null,
-      currentView === 'home' ? renderHome() : renderProductDetail()
-    );
-  }
-
-  ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(TelegramShopApp));
+ReactDOM.createRoot(document.getElementById('root')).render(<TelegramShopApp />);
 </script>
 
 </body>

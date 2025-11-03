@@ -4,179 +4,168 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Taverne de Limoges</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: linear-gradient(180deg, #1a1410 0%, #2d1f0f 50%, #1a1410 100%);
-      color: #fbbf24;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    h1 { text-align: center; margin-bottom: 20px; }
-    button { cursor: pointer; border: none; border-radius: 12px; padding: 10px 15px; margin: 5px; font-weight: bold; }
-    .category { background: linear-gradient(135deg, #78350f 0%, #92400e 100%); color: #fff; font-size: 18px; }
-    .category:hover { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
-    .product { background: #44403c; color: #fbbf24; padding: 10px; border-radius: 12px; margin: 10px 0; }
-    .quantity { background: #57534e; color: #fbbf24; padding: 5px; border-radius: 8px; margin: 5px; }
-    .selected { background: #fbbf24; color: #78350f; }
-    textarea { width: 100%; border-radius: 8px; padding: 8px; margin-top: 5px; background: #222; color: #fbbf24; border: 1px solid #fbbf24; }
-    .btn-order { background: #fbbf24; color: #78350f; width: 100%; padding: 10px; margin-top: 10px; font-size: 18px; }
-    video { width: 100%; border-radius: 12px; margin: 10px 0; }
-  </style>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React + ReactDOM CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  
+  <!-- Lucide React Icons CDN -->
+  <script type="module">
+    import * as LucideIcons from 'https://cdn.jsdelivr.net/npm/lucide-react@0.230.0/dist/esm/lucide-react.js';
+    window.LucideIcons = LucideIcons;
+  </script>
 </head>
-<body>
-  <div id="app">
-    <h1>🏺 La Taverne de Limoges</h1>
-    <div id="home">
-      <div id="categories"></div>
-    </div>
-    <div id="product-detail" style="display:none;">
-      <button id="back-btn">⬅ Retour</button>
-      <div id="product-container"></div>
-    </div>
-  </div>
+<body class="bg-gray-900">
+  <div id="root"></div>
 
-  <script>
-    const TELEGRAM_USERNAME = '@Aladin_870';
+  <script type="text/babel">
+    const { useState } = React;
+    const { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } = window.LucideIcons;
 
-    const categories = [
-      { id: 'weed', name: 'Weed', emoji: '🌿' },
-      { id: 'mousse', name: 'Jaune Mousseux', emoji: '💨' },
-      { id: 'frozen', name: 'Frozen', emoji: '❄️' },
-      { id: 'filtrer', name: 'Filtrer', emoji: '🔥' },
-      { id: 'static', name: 'Static Premium', emoji: '⚡' }
-    ];
+    const TelegramShopApp = () => {
+      const [currentView, setCurrentView] = useState('home');
+      const [selectedCategory, setSelectedCategory] = useState(null);
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [selectedQuantity, setSelectedQuantity] = useState(null);
+      const [bulkQuantity, setBulkQuantity] = useState(100);
+      const [isBulkMode, setIsBulkMode] = useState(false);
+      const [showBulkSection, setShowBulkSection] = useState(false);
+      const [deliveryAddress, setDeliveryAddress] = useState('');
+      const [isPriorityDelivery, setIsPriorityDelivery] = useState(false);
 
-    const quantityOptions = {
-      weed: [{ amount: 1.4, price: 10, label: '1.4g' }, { amount: 2.8, price: 20, label: '2.8g' }],
-      mousse: [{ amount: 2.3, price: 10, label: '2.3g' }, { amount: 4.6, price: 20, label: '4.6g' }],
-      frozen: [{ amount: 0.5, price: 30, label: '0.5g' }, { amount: 1, price: 50, label: '1g' }],
-      filtrer: [{ amount: 1, price: 25, label: '1g' }, { amount: 3, price: 70, label: '3g' }],
-      static: [{ amount: 1.2, price: 10, label: '1.2g' }, { amount: 2.4, price: 20, label: '2.4g' }]
+      const TELEGRAM_USERNAME = '@Aladin_870';
+      const TELEGRAM_CHANNEL = 'https://t.me/+zXPeOM38QjszYzdk';
+
+      const categories = [
+        { id: 'weed', name: 'Weed', emoji: '🌿', gradient: 'from-amber-700 via-green-800 to-emerald-900', shadow: 'shadow-green-900/70', glow: 'shadow-[0_0_30px_rgba(34,197,94,0.3)]' },
+        { id: 'mousse', name: 'Jaune Mousseux', emoji: '💨', gradient: 'from-stone-700 via-amber-800 to-yellow-900', shadow: 'shadow-amber-900/70', glow: 'shadow-[0_0_30px_rgba(217,119,6,0.3)]' },
+        { id: 'frozen', name: 'Frozen', emoji: '❄️', gradient: 'from-slate-700 via-cyan-900 to-blue-900', shadow: 'shadow-cyan-900/70', glow: 'shadow-[0_0_30px_rgba(6,182,212,0.3)]' },
+        { id: 'filtrer', name: 'Filtrer', emoji: '🔥', gradient: 'from-red-900 via-orange-800 to-amber-900', shadow: 'shadow-red-900/70', glow: 'shadow-[0_0_30px_rgba(220,38,38,0.3)]' },
+        { id: 'static', name: 'Static Premium', emoji: '⚡', gradient: 'from-gray-800 via-gray-700 to-gray-900', shadow: 'shadow-gray-900/70', glow: 'shadow-[0_0_30px_rgba(107,114,128,0.3)]' }
+      ];
+
+      const quantityOptions = {
+        weed: [ { amount: 1.4, price: 10, label: '1.4g' }, { amount: 2.8, price: 20, label: '2.8g' }, { amount: 4.5, price: 30, label: '4.5g' }, { amount: 11, price: 70, label: '11g' }, { amount: 25, price: 150, label: '25g' }, { amount: 50, price: 240, label: '50g' }, { amount: 100, price: 450, label: '100g', treasure: true } ],
+        mousse: [ { amount: 2.3, price: 10, label: '2.3g' }, { amount: 4.6, price: 20, label: '4.6g' }, { amount: 10, price: 50, label: '10g' }, { amount: 25, price: 110, label: '25g' }, { amount: 50, price: 200, label: '50g' }, { amount: 100, price: 350, label: '100g', treasure: true } ],
+        frozen: [ { amount: 0.5, price: 30, label: '0.5g' }, { amount: 1, price: 50, label: '1g' }, { amount: 2, price: 100, label: '2g' }, { amount: 5, price: 250, label: '5g', treasure: true }, { amount: 10, price: 450, label: '10g' } ],
+        filtrer: [ { amount: 1, price: 25, label: '1g' }, { amount: 3, price: 70, label: '3g' }, { amount: 5, price: 110, label: '5g' }, { amount: 10, price: 200, label: '10g', treasure: true } ],
+        static: [ { amount: 1.2, price: 10, label: '1.2g' }, { amount: 2.4, price: 20, label: '2.4g' }, { amount: 5, price: 40, label: '5g' }, { amount: 10, price: 80, label: '10g' }, { amount: 25, price: 180, label: '25g' }, { amount: 50, price: 300, label: '50g' }, { amount: 100, price: 550, label: '100g', treasure: true } ]
+      };
+
+      const products = {
+        frozen: [ { id: 1, name: 'Frozen Premium', description: 'White💎 - Pureté légendaire', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '💎 Rare' } ],
+        mousse: [ { id: 4, name: 'Jaune Mousseux', description: 'Jaune Mousseux - Texture mystique', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '⭐ Défonce+' } ],
+        weed: [ { id: 5, name: 'Weed Premium', description: 'Weed Premium - Trésor ancestral', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '👑 Quality++' } ],
+        filtrer: [ { id: 6, name: 'Filtrer Premium', description: 'Filtrer - Qualité suprême', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '🔥 Défonce++' } ],
+        static: [ { id: 7, name: 'Static Premium', description: 'Static Premium - Qualité suprême', video: 'https://www.w3schools.com/html/mov_bbb.mp4', badge: '⚡ Premium' } ]
+      };
+
+      const getCaveGradient = (categoryId) => {
+        const gradients = {
+          weed: '#1a4d2e 0%, #2d5f3f 50%, #1a4d2e 100%',
+          mousse: '#78350f 0%, #92400e 50%, #78350f 100%',
+          frozen: '#1e3a5f 0%, #2d5a7e 50%, #1e3a5f 100%',
+          filtrer: '#7c2d12 0%, #991b1b 50%, #7c2d12 100%',
+          static: '#1f2937 0%, #374151 50%, #1f2937 100%'
+        };
+        return gradients[categoryId] || gradients.weed;
+      };
+
+      const handleCategoryClick = (categoryId) => {
+        setSelectedCategory(categoryId);
+        const categoryProducts = products[categoryId] || [];
+        if (categoryProducts.length > 0) {
+          setSelectedProduct(categoryProducts[0]);
+          setSelectedQuantity(null);
+          setCurrentView('product-detail');
+        }
+      };
+
+      const calculateBulkPrice = (grams) => {
+        const basePrice = selectedCategory === 'weed' ? 4.5 :
+                          selectedCategory === 'mousse' ? 3.5 :
+                          selectedCategory === 'frozen' ? 45 :
+                          selectedCategory === 'filtrer' ? 2 :
+                          selectedCategory === 'static' ? 2 : 4;
+        return Math.round(grams * basePrice);
+      };
+
+      const handleOrder = () => {
+        if (!selectedQuantity && !isBulkMode) return;
+        const finalQuantity = isBulkMode ? bulkQuantity : selectedQuantity.amount;
+        const finalPrice = isBulkMode ? calculateBulkPrice(bulkQuantity) : selectedQuantity.price;
+        const finalLabel = isBulkMode ? `${bulkQuantity}g` : selectedQuantity.label;
+        const totalPrice = isPriorityDelivery ? finalPrice + 5 : finalPrice;
+
+        const message = `🏺 *NOUVELLE COMMANDE*\n\n💎 Produit: ${selectedProduct.name}\n⚖️ Quantité: ${finalLabel}\n💰 Prix produit: ${finalPrice}€\n${isPriorityDelivery ? '⚡ Livraison Prioritaire: +5€\n' : ''}💳 Total: ${totalPrice}€\n\n📍 Adresse de livraison:\n${deliveryAddress || 'Non renseignée'}\n\nQue la fortune vous accompagne !`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
+        navigator.clipboard.writeText(message).then(() => window.open(telegramUrl, '_blank'));
+      };
+
+      const handleReferral = () => {
+        const referralMessage = `🎁 Vous avez été Parrainez 🎁\n\nRejoins-nous et bénéficiez de 1G gratuit sur votre première commande !\n\n💎 Qualité garantie\n⚡ Livraison rapide\n🎁 1G offert à chaques Parrainage !\n\n👉 Cliquez ici : ${TELEGRAM_CHANNEL}`;
+        const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(TELEGRAM_CHANNEL)}&text=${encodeURIComponent(referralMessage)}`;
+        window.open(telegramShareUrl, '_blank');
+      };
+
+      const renderHome = () => (
+        <div className="min-h-screen p-6 text-center">
+          <h1 className="text-3xl font-bold text-yellow-400 mb-6">La Taverne de Limoges</h1>
+          <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
+            {categories.map(c => (
+              <button key={c.id} className="p-4 rounded-xl bg-yellow-700 text-white" onClick={() => handleCategoryClick(c.id)}>
+                <div className="text-2xl mb-2">{c.emoji}</div>
+                <div>{c.name}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+
+      const renderProductDetail = () => {
+        const options = quantityOptions[selectedCategory] || [];
+        return (
+          <div className="min-h-screen p-6 text-center">
+            <button className="mb-4 p-2 bg-gray-800 text-yellow-400 rounded" onClick={() => setCurrentView('home')}>
+              <ChevronLeft className="w-5 h-5 inline" /> Retour
+            </button>
+            <h2 className="text-2xl font-bold text-yellow-400 mb-4">{selectedProduct.name}</h2>
+            <video controls className="w-full max-w-md mx-auto rounded mb-4">
+              <source src={selectedProduct.video} type="video/mp4" />
+            </video>
+            <p className="mb-4 text-yellow-200">{selectedProduct.description}</p>
+
+            <div className="grid grid-cols-2 gap-2 max-w-md mx-auto mb-4">
+              {options.map((opt, i) => (
+                <button key={i} className="p-2 rounded bg-gray-700 text-yellow-400" onClick={() => setSelectedQuantity(opt)}>
+                  {opt.label} - {opt.price}€
+                </button>
+              ))}
+            </div>
+
+            {(selectedQuantity || isBulkMode) && (
+              <button className="p-4 rounded bg-yellow-600 text-gray-900 font-bold" onClick={handleOrder}>
+                Commander {(isBulkMode ? bulkQuantity + 'g' : selectedQuantity.label)}
+              </button>
+            )}
+          </div>
+        );
+      };
+
+      return (
+        <div>
+          {currentView === 'home' && renderHome()}
+          {currentView === 'product-detail' && renderProductDetail()}
+        </div>
+      );
     };
 
-    const products = {
-      frozen: [{ name: 'Frozen Premium', description: 'White💎 - Pureté légendaire', video: 'https://www.w3schools.com/html/mov_bbb.mp4' }],
-      mousse: [{ name: 'Jaune Mousseux', description: 'Jaune Mousseux - Texture mystique', video: 'https://www.w3schools.com/html/mov_bbb.mp4' }],
-      weed: [{ name: 'Weed Premium', description: 'Weed Premium - Trésor ancestral', video: 'https://www.w3schools.com/html/mov_bbb.mp4' }],
-      filtrer: [{ name: 'Filtrer Premium', description: 'Filtrer - Qualité suprême', video: 'https://www.w3schools.com/html/mov_bbb.mp4' }],
-      static: [{ name: 'Static Premium', description: 'Static Premium - Qualité suprême', video: 'https://www.w3schools.com/html/mov_bbb.mp4' }]
-    };
-
-    let selectedCategory = null;
-    let selectedProduct = null;
-    let selectedQuantity = null;
-    let bulkQuantity = 100;
-    let isBulkMode = false;
-
-    const categoriesDiv = document.getElementById('categories');
-    const homeDiv = document.getElementById('home');
-    const productDetailDiv = document.getElementById('product-detail');
-    const productContainer = document.getElementById('product-container');
-
-    function showCategories() {
-      categoriesDiv.innerHTML = '';
-      categories.forEach(cat => {
-        const btn = document.createElement('button');
-        btn.className = 'category';
-        btn.innerText = `${cat.emoji} ${cat.name}`;
-        btn.onclick = () => selectCategory(cat.id);
-        categoriesDiv.appendChild(btn);
-      });
-    }
-
-    function selectCategory(catId) {
-      selectedCategory = catId;
-      selectedProduct = products[catId][0];
-      showProductDetail();
-    }
-
-    function showProductDetail() {
-      homeDiv.style.display = 'none';
-      productDetailDiv.style.display = 'block';
-      renderProduct();
-    }
-
-    function renderProduct() {
-      productContainer.innerHTML = '';
-
-      const prodDiv = document.createElement('div');
-      prodDiv.className = 'product';
-
-      const title = document.createElement('h2');
-      title.innerText = selectedProduct.name;
-      prodDiv.appendChild(title);
-
-      const video = document.createElement('video');
-      video.controls = true;
-      const source = document.createElement('source');
-      source.src = selectedProduct.video;
-      source.type = 'video/mp4';
-      video.appendChild(source);
-      prodDiv.appendChild(video);
-
-      const desc = document.createElement('p');
-      desc.innerText = selectedProduct.description;
-      prodDiv.appendChild(desc);
-
-      // Quantité
-      const qtyDiv = document.createElement('div');
-      qtyDiv.innerHTML = '<strong>Choisissez une quantité :</strong>';
-      quantityOptions[selectedCategory].forEach(q => {
-        const qBtn = document.createElement('button');
-        qBtn.className = 'quantity';
-        qBtn.innerText = `${q.label} - ${q.price}€`;
-        qBtn.onclick = () => { selectedQuantity = q; highlightSelected(qBtn); };
-        qtyDiv.appendChild(qBtn);
-      });
-      prodDiv.appendChild(qtyDiv);
-
-      // Adresse
-      const addrDiv = document.createElement('div');
-      addrDiv.innerHTML = '<label>Adresse de livraison :</label>';
-      const textarea = document.createElement('textarea');
-      textarea.id = 'delivery';
-      addrDiv.appendChild(textarea);
-      prodDiv.appendChild(addrDiv);
-
-      // Bouton Commander
-      const orderBtn = document.createElement('button');
-      orderBtn.className = 'btn-order';
-      orderBtn.innerText = 'Commander';
-      orderBtn.onclick = handleOrder;
-      prodDiv.appendChild(orderBtn);
-
-      productContainer.appendChild(prodDiv);
-    }
-
-    function highlightSelected(button) {
-      const buttons = document.querySelectorAll('.quantity');
-      buttons.forEach(b => b.classList.remove('selected'));
-      button.classList.add('selected');
-    }
-
-    function handleOrder() {
-      const deliveryAddress = document.getElementById('delivery').value || 'Non renseignée';
-      if (!selectedQuantity) { alert('Veuillez sélectionner une quantité'); return; }
-
-      const message = `🏺 NOUVELLE COMMANDE\nProduit: ${selectedProduct.name}\nQuantité: ${selectedQuantity.label}\nPrix: ${selectedQuantity.price}€\nAdresse: ${deliveryAddress}`;
-      const encodedMessage = encodeURIComponent(message);
-      const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
-      window.open(telegramUrl, '_blank');
-    }
-
-    document.getElementById('back-btn').onclick = () => {
-      productDetailDiv.style.display = 'none';
-      homeDiv.style.display = 'block';
-      selectedQuantity = null;
-    }
-
-    showCategories();
+    ReactDOM.createRoot(document.getElementById('root')).render(<TelegramShopApp />);
   </script>
 </body>
 </html>

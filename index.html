@@ -16,10 +16,18 @@
   <div id="root"></div>
 
   <script>
-    // Attendre que Lucide soit chargé
-    window.addEventListener('load', function() {
+    // Attendre que Lucide soit chargé correctement
+    function waitForLucide(callback) {
+      if (window.lucide) {
+        callback(window.lucide);
+      } else {
+        setTimeout(() => waitForLucide(callback), 50);
+      }
+    }
+
+    waitForLucide((lucide) => {
       const { useState } = React;
-      const { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } = window.lucide;
+      const { ShoppingCart, ChevronLeft } = lucide;
 
       function App() {
         const [view, setView] = useState('home');

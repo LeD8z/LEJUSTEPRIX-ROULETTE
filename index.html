@@ -3,94 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La Taverne de Limoges</title>
+  <title>Telegram Shop App</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React & ReactDOM UMD -->
+  <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <!-- Lucide UMD -->
-  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.umd.js"></script>
+  <!-- Lucide React -->
+  <script type="module">
+    import * as lucide from 'https://cdn.jsdelivr.net/npm/lucide-react@0.259.0/dist/esm/index.js';
+    window.lucide = lucide;
+  </script>
 </head>
 <body class="bg-gray-900 text-white font-sans">
   <div id="root"></div>
 
-  <script>
-    // Tout dans un IIFE pour éviter les problèmes CSP
-    (function() {
-      const { ShoppingCart, ChevronLeft } = window.lucide;
-      const { useState } = React;
+  <script type="module">
+    const { useState } = React;
+    const { ShoppingCart, ChevronLeft, Sparkles, Coins, Gem, Crown, Scroll } = window.lucide;
 
-      function App() {
-        const [view, setView] = useState('home');
-        const [selectedCategory, setSelectedCategory] = useState(null);
-        const [selectedProduct, setSelectedProduct] = useState(null);
+    function TelegramShopApp() {
+      const [currentView, setCurrentView] = useState('home');
+      const [selectedCategory, setSelectedCategory] = useState(null);
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [selectedQuantity, setSelectedQuantity] = useState(null);
+      const [bulkQuantity, setBulkQuantity] = useState(100);
+      const [isBulkMode, setIsBulkMode] = useState(false);
+      const [showBulkSection, setShowBulkSection] = useState(false);
+      const [deliveryAddress, setDeliveryAddress] = useState('');
+      const [isPriorityDelivery, setIsPriorityDelivery] = useState(false);
 
-        const categories = [
-          { id: 'weed', name: 'Weed', emoji: '🌿' },
-          { id: 'mousse', name: 'Jaune Mousseux', emoji: '💨' },
-          { id: 'frozen', name: 'Frozen', emoji: '❄️' },
-          { id: 'filtrer', name: 'Filtrer', emoji: '🔥' },
-          { id: 'static', name: 'Static Premium', emoji: '⚡' }
-        ];
+      const TELEGRAM_USERNAME = '@Aladin_870';
+      const TELEGRAM_CHANNEL = 'https://t.me/+zXPeOM38QjszYzdk';
 
-        const products = {
-          weed: [{ id: 1, name: 'Weed Premium', desc: 'Weed Premium - Trésor ancestral' }],
-          mousse: [{ id: 2, name: 'Jaune Mousseux', desc: 'Jaune Mousseux - Texture mystique' }],
-          frozen: [{ id: 3, name: 'Frozen Premium', desc: 'White💎 - Pureté légendaire' }],
-          filtrer: [{ id: 4, name: 'Filtrer Premium', desc: 'Filtrer - Qualité suprême' }],
-          static: [{ id: 5, name: 'Static Premium', desc: 'Static Premium - Qualité suprême' }]
-        };
+      const categories = [
+        { id: 'weed', name: 'Weed', emoji: '🌿' },
+        { id: 'mousse', name: 'Jaune Mousseux', emoji: '💨' },
+        { id: 'frozen', name: 'Frozen', emoji: '❄️' },
+        { id: 'filtrer', name: 'Filtrer', emoji: '🔥' },
+        { id: 'static', name: 'Static Premium', emoji: '⚡' }
+      ];
 
-        function handleCategoryClick(catId) {
-          setSelectedCategory(catId);
-          setSelectedProduct(products[catId][0]);
-          setView('product');
+      const quantityOptions = {
+        weed: [ { amount: 1.4, price: 10, label: '1.4g' }, { amount: 25, price: 150, label: '25g' } ],
+        mousse: [ { amount: 2.3, price: 10, label: '2.3g' } ],
+        frozen: [ { amount: 0.5, price: 30, label: '0.5g' } ],
+        filtrer: [ { amount: 1, price: 25, label: '1g' } ],
+        static: [ { amount: 1.2, price: 10, label: '1.2g' } ]
+      };
+
+      const products = {
+        weed: [{ id: 1, name: 'Weed Premium', description: 'Weed Premium - Trésor ancestral' }],
+        mousse: [{ id: 2, name: 'Jaune Mousseux', description: 'Jaune Mousseux - Texture mystique' }],
+        frozen: [{ id: 3, name: 'Frozen Premium', description: 'White💎 - Pureté légendaire' }],
+        filtrer: [{ id: 4, name: 'Filtrer Premium', description: 'Filtrer - Qualité suprême' }],
+        static: [{ id: 5, name: 'Static Premium', description: 'Static Premium - Qualité suprême' }]
+      };
+
+      const handleCategoryClick = (categoryId) => {
+        setSelectedCategory(categoryId);
+        const categoryProducts = products[categoryId] || [];
+        if(categoryProducts.length > 0){
+          setSelectedProduct(categoryProducts[0]);
+          setSelectedQuantity(null);
+          setCurrentView('product-detail');
         }
+      };
 
-        function handleBack() {
-          setView('home');
-          setSelectedCategory(null);
-          setSelectedProduct(null);
-        }
+      const handleOrder = () => {
+        if(!selectedQuantity && !isBulkMode) return;
+        const finalQuantity = isBulkMode ? bulkQuantity : selectedQuantity.amount;
+        const finalPrice = isBulkMode ? finalQuantity * 4 : selectedQuantity.price;
+        const totalPrice = isPriorityDelivery ? finalPrice + 5 : finalPrice;
 
-        function renderHome() {
-          return React.createElement("div", { className: "min-h-screen p-6" },
-            React.createElement("h1", { className: "text-3xl font-bold text-center mb-6" }, "La Taverne de Limoges"),
-            React.createElement("div", { className: "grid grid-cols-3 gap-4" },
-              categories.map(cat =>
-                React.createElement("button", {
-                  key: cat.id,
-                  onClick: () => handleCategoryClick(cat.id),
-                  className: "p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition"
-                }, cat.emoji + " " + cat.name)
-              )
-            )
-          );
-        }
+        const message = `🏺 *NOUVELLE COMMANDE*\nProduit: ${selectedProduct.name}\nQuantité: ${finalQuantity}g\nPrix: ${totalPrice}€\nAdresse: ${deliveryAddress || 'Non renseignée'}`;
+        const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(message)}`;
+        window.open(telegramUrl, '_blank');
+      };
 
-        function renderProduct() {
-          if (!selectedProduct) return null;
-          return React.createElement("div", { className: "min-h-screen p-5" },
-            React.createElement("button", {
-              onClick: handleBack,
-              className: "mb-4 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 flex items-center"
-            }, React.createElement(ChevronLeft, { className: "w-4 h-4 mr-2" }), "Retour"),
-            React.createElement("h2", { className: "text-xl font-bold mb-3" }, selectedProduct.name),
-            React.createElement("p", { className: "mb-2" }, selectedProduct.desc),
-            React.createElement("button", {
-              onClick: () => alert('Commande envoyée !'),
-              className: "px-4 py-2 bg-yellow-500 text-gray-900 rounded hover:bg-yellow-400 flex items-center"
-            }, React.createElement(ShoppingCart, { className: "w-5 h-5 mr-2" }), "Commander")
-          );
-        }
+      const renderHome = () => (
+        <div className="p-6">
+          <h1 className="text-3xl font-bold mb-4">La Taverne de Limoges</h1>
+          <div className="grid grid-cols-3 gap-3">
+            {categories.map(cat => (
+              <button key={cat.id} className="p-4 rounded-xl bg-amber-700" onClick={() => handleCategoryClick(cat.id)}>
+                <div className="text-2xl">{cat.emoji}</div>
+                <span>{cat.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
 
-        return view === 'home' ? renderHome() : renderProduct();
-      }
+      const renderProductDetail = () => {
+        const options = quantityOptions[selectedCategory] || [];
+        return (
+          <div className="p-6">
+            <button className="mb-4 p-2 bg-gray-700 rounded" onClick={() => setCurrentView('home')}>← Retour</button>
+            <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
+            <p className="mb-4">{selectedProduct.description}</p>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {options.map((opt, i) => (
+                <button key={i} className="p-3 rounded bg-yellow-600" onClick={() => { setSelectedQuantity(opt); setIsBulkMode(false); }}>
+                  {opt.label} - {opt.price}€
+                </button>
+              ))}
+            </div>
+            <textarea 
+              placeholder="Adresse de livraison" 
+              className="w-full p-2 rounded mb-3 text-black"
+              value={deliveryAddress}
+              onChange={e => setDeliveryAddress(e.target.value)}
+            />
+            <div className="flex items-center gap-3 mb-3">
+              <input type="checkbox" checked={isPriorityDelivery} onChange={() => setIsPriorityDelivery(!isPriorityDelivery)} />
+              <span>Livraison Prioritaire (+5€)</span>
+            </div>
+            <button className="p-3 bg-green-600 rounded w-full" onClick={handleOrder}>
+              <ShoppingCart className="inline w-5 h-5 mr-2" /> Commander
+            </button>
+          </div>
+        );
+      };
 
-      const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(React.createElement(App));
-    })();
+      return currentView === 'home' ? renderHome() : renderProductDetail();
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(TelegramShopApp));
   </script>
 </body>
 </html>
